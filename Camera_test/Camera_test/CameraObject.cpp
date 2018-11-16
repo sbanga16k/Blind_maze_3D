@@ -76,52 +76,62 @@ void CameraObject::setCameraTransform()
 
 
 // Moves the camera in accordance with the keypress
-void CameraObject::moveCamera()
+void CameraObject::moveCamera(int rotInc, int translInc)
 {
-	double posX, posY, posZ;		// Stores components of extremity of FoV along each axis
-	this->getEndComponents(posX, posY, posZ);
+	double compX, compY, compZ;		// Stores components of unit vector in current direction along each axis
+	this->getEndComponents(compX, compY, compZ);
 
-	// Rotates camera acc. to arrow key press
+	// Rotates camera acc. to arrow key press in 1 degree increments
 	if (FsGetKeyState(FSKEY_RIGHT)) {
-		heading += 1;
+		heading += rotInc;
 	}
 	else if (FsGetKeyState(FSKEY_LEFT)) {
-		heading -= 1;
+		heading -= rotInc;
 	}
 	else if (FsGetKeyState(FSKEY_UP)) {
-		pitch += 1;
+		pitch += rotInc;
 	}
 	else if (FsGetKeyState(FSKEY_DOWN)) {
-		pitch -= 1;
+		pitch -= rotInc;
 	}
 
 	// Translates camera acc. to WASD key press
 	else if (FsGetKeyState(FSKEY_W)) {
-		camZ += posZ * 0.5;
-	}
-	else if (FsGetKeyState(FSKEY_S)) {
-		camZ -= posZ * 0.5;
+		camX += compX * translInc;
+		camY += compY * translInc;
+		camZ += compZ * translInc;
 	}
 	else if (FsGetKeyState(FSKEY_A)) {
-		camX += posX * 0.5;
+		camX -= compX * translInc;
+	}
+	else if (FsGetKeyState(FSKEY_S)) {
+		camX -= compX * translInc;
+		camY -= compY * translInc;
+		camZ -= compZ * translInc;
 	}
 	else if (FsGetKeyState(FSKEY_D)) {
-		camX -= posX * 0.5;
+		camX += compX * translInc;
+	}
+	else if (FsGetKeyState(FSKEY_A)) {
+		camX +=  * 0.5;
+	}
+	else if (FsGetKeyState(FSKEY_D)) {
+		camX -=  * 0.5;
 	}
 }
 
 
-// Sets the input arguments to the position of end of FoV in terms of components along each axis
-void CameraObject::getEndComponents(double &endX, double &endY, double &endZ)
+// Sets the input args to components of unit vector in current direction along each axis
+void CameraObject::getComponents(double &compX, double &compY, double &compZ)
 {
-	endX = -cos(pitch)*sin(heading);		// (Projection of end of FoV on XZ plane) x (its component along X axis)
-	endY = sin(pitch);					// Projection of end of FoV on Y axis
-	endZ = -cos(pitch)*cos(heading);		// (Projection of end of FoV on XZ plane) x (its component along Z axis)
+	compX = cos(pitch)*-sin(heading);		// (Projection of end of FoV on XZ plane) x (its component along X axis)
+	compY = sin(pitch);					// Projection of end of FoV on Y axis
+	compZ = cos(pitch)*-cos(heading);		// (Projection of end of FoV on XZ plane) x (its component along Z axis)
 }
 
 
 // Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
-void CameraObject::printVals(char *result)
+char* CameraObject::printVals()
 {
 	string temp;
 
@@ -131,5 +141,8 @@ void CameraObject::printVals(char *result)
 	temp += " h=" + to_string(h);
 	temp += " p=" + to_string(p);
 	temp += " b=" + to_string(b);
-	strcpy(result, temp.c_str());
+
+	char* result = new char[temp.size() + 1];
+	strcpy_s(result, temp.size() + 1, temp.c_str());
+	return result;
 }

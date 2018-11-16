@@ -7,7 +7,7 @@ class CameraObject
 {
 private:
 	double camX, camY, camZ;		// Camera's local coordinates
-	double heading, pitch, bank;	// Camera's heading, pitch & bank (Euler) angles (in degrees)
+	double heading, pitch, bank;	// Camera's heading, pitch & bank (Euler) angles (in degrees) measured CCW
 	double fov, nearZ, farZ;		// Specifying angle for FoV, nearest & farthest depth for object visibility
 
 public:
@@ -22,7 +22,8 @@ public:
 	void setCameraProjection();	// Sets projection mtx for calc. screen coords using camera's coord system
 	void setCameraTransform();	// Sets mtx for transformation from global coord to camera's coord system
 
-	void moveCamera();			// Moves the camera in accordance with the keypress
-	void getEndComponents(double &endX, double &endY, double &endZ);	// Sets input args to pos of end of FoV
-	void printVals(char *result);	// Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
+	void moveCamera(int rotInc = 1, int translInc = 5);	// Moves the camera in accordance with the keypress
+	// Sets input args to components of unit vector in current direction along each axis
+	void getComponents(double &endX, double &endY, double &endZ);
+	char* printVals(char *result);		// Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
 };
