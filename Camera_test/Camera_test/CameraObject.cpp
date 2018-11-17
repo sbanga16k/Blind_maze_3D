@@ -96,10 +96,11 @@ void CameraObject::moveCamera(double rotInc, double translInc)
 		heading += rotInc;
 	}
 
-	// Allows rotation right-left uncapped
-	// But angle clipped to be in the range of [-180,180]
-	if (heading > 360 || heading < -360)
-		heading = (heading > 360)*(heading - 360) + (heading < -360)*(heading + 360);
+	// Camera angle clipped to be in the range of [-180,180] w/o affecting camera motion
+	if (heading > 180)
+		heading = -180 + (heading - 180);
+	else if (heading < -180)
+		heading = 180 + (heading + 180);
 	
 	// Up-down rotation
 	// Upward rot capped at 10 deg, downward rot capped at -20 deg
@@ -115,7 +116,7 @@ void CameraObject::moveCamera(double rotInc, double translInc)
 	//// Translates camera acc. to WASD key press
 	// Moves in North direction
 	else if (FsGetKeyState(FSKEY_W)) {
-		camX += -compX * translInc;
+		camX += compX * translInc;
 		camZ += compZ * translInc;
 	}
 
@@ -133,7 +134,7 @@ void CameraObject::moveCamera(double rotInc, double translInc)
 
 	// Moves in South direction
 	else if (FsGetKeyState(FSKEY_S)) {
-		camX -= -compX * translInc;
+		camX -= compX * translInc;
 		camZ -= compZ * translInc;
 	}
 	
@@ -145,7 +146,7 @@ void CameraObject::getForwardComponents(double &compX, double &compY, double &co
 {
 	double p = pitch * PI / 180.;
 	double h = heading * PI / 180.;
-	compX = cos(p)*sin(h);	// (Projection of end of FoV on XZ plane) x (component along X axis)
+	compX = cos(p)*-sin(h);	// (Projection of end of FoV on XZ plane) x (component along X axis)
 	compY = sin(p);					// Projection of end of FoV on Y axis
 	compZ = cos(p)*-cos(h);	// (Projection of end of FoV on XZ plane) x (component along Z axis)
 }
@@ -162,22 +163,14 @@ void CameraObject::getRotComponents(double compX, double compZ, double & rotX, d
 // Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
 char* CameraObject::printVals(bool debug)
 {
-	string temp;
-	double headingDisp;
-
-	if (heading > 180)
-		headingDisp = -180 + (heading - 180);
-	else if (heading < -180)
-		headingDisp = 180 + (heading + 180);
-	else
-		headingDisp = heading;
+	string temp;				// String to store relevant text to display on graphics window
 
 	if (debug) {
 		temp = " x=" + to_string(camX);
 		temp += " y=" + to_string(camY);
 	}
 	temp += " z=" + to_string(camZ);
-	temp += " h=" + to_string(headingDisp);
+	temp += " h=" + to_string(heading);
 	if (debug) {
 		temp += " p=" + to_string(pitch);
 		temp += " b=" + to_string(bank);
