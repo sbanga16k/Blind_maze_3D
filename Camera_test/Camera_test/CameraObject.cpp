@@ -1,5 +1,11 @@
+// File that contains definition for methods for CameraObject class defined in 
+// the header file
+
 #include <iostream>
-#include <string>
+#include <sstream>			// ostringstream
+#include <iomanip>			// setprecision
+#include <stdlib.h>			// abs
+#include <math.h>			// round
 #include "fssimplewindow.h"
 #include "CameraObject.h"
 
@@ -114,8 +120,13 @@ void CameraObject::moveCamera(double rotInc, double translInc)
 	}
 
 	//// Translates camera acc. to WASD key press
+
+	// Shift key used for sprinting
+	if (FsGetKeyState(FSKEY_SHIFT))
+		translInc *= 2;
+
 	// Moves in North direction
-	else if (FsGetKeyState(FSKEY_W)) {
+	if (FsGetKeyState(FSKEY_W)) {
 		camX += compX * translInc;
 		camZ += compZ * translInc;
 	}
@@ -137,7 +148,6 @@ void CameraObject::moveCamera(double rotInc, double translInc)
 		camX -= compX * translInc;
 		camZ -= compZ * translInc;
 	}
-	
 }
 
 
@@ -160,23 +170,65 @@ void CameraObject::getRotComponents(double compX, double compZ, double & rotX, d
 	rotZ = compX * sin(theta) + compZ * cos(theta);
 }
 
+
+// Computes compass direction in accordance with the heading angle & adds it to the display text
+void CameraObject::getDirText(string &dispText)
+{
+	// Adds char 'E' or 'W' to start of string if angle b/w NE-SE or NW-SW
+	if (abs(heading) > 56.25 && abs(heading) < 123.75)
+		dispText += (-heading > 0) ? " E" : " W";
+
+	// Adds appropriate chars depending on heading angle
+	if (abs(heading) <= 11.25)
+		dispText += " N";
+	else if (abs(heading) > 11.25 && abs(heading) <= 33.75)
+		dispText += " NN";
+	else if (abs(heading) > 33.75 && abs(heading) <= 56.25)
+		dispText += " N";
+	else if (abs(heading) > 56.25 && abs(heading) < 78.75)
+		dispText += "N";
+	else if (abs(heading) > 101.25 && abs(heading) <= 123.75)
+		dispText += "S";
+	else if (abs(heading) > 123.75 && abs(heading) <= 146.25)
+		dispText += " S";
+	else if (abs(heading) > 146.25 && abs(heading) < 168.75)
+		dispText += " SS";
+	else if (abs(heading) >= 168.75)
+		dispText += " S";
+
+	// Adds char 'E' or 'W' to end of string except for when it is not in N, E, W, S direction categories
+	if ((abs(heading) > 11.25 && abs(heading) < 78.75) || (abs(heading) > 101.25 && abs(heading) < 168.75))
+		dispText += (-heading > 0) ? "E" : "W";
+	
+}
+
+
 // Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
 char* CameraObject::printVals(bool debug)
 {
-	string temp;				// String to store relevant text to display on graphics window
+	string dispText;				// String to store relevant text to display on graphics window
 
 	if (debug) {
-		temp = " x=" + to_string(camX);
-		temp += " y=" + to_string(camY);
+		dispText = " x=" + to_string(camX);
+		dispText += " y=" + to_string(camY);
+		dispText += " z=" + to_string(camZ);
 	}
-	temp += " z=" + to_string(camZ);
-	temp += " h=" + to_string(heading);
+	
+	// Limits precision of heading angle to 2
+	std::ostringstream oss;
+	oss << std::fixed << std::setfill('0') << std::setprecision(2) << abs(heading);
+
+	// Displays text in terms of compass direction depending on the current heading angle
+	dispText = oss.str();
+	getDirText(dispText);
+	
 	if (debug) {
-		temp += " p=" + to_string(pitch);
-		temp += " b=" + to_string(bank);
+		dispText += " h=" + to_string(heading);
+		dispText += " p=" + to_string(pitch);
+		dispText += " b=" + to_string(bank);
 	}
 
-	char* result = new char[temp.size() + 1];
-	strcpy_s(result, temp.size() + 1, temp.c_str());
+	char* result = new char[dispText.size() + 1];
+	strcpy_s(result, dispText.size() + 1, dispText.c_str());
 	return result;
 }
