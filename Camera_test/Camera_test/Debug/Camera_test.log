@@ -1,2 +1,9 @@
-﻿  CameraObject.cpp
+﻿  testMain.cpp
+c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(52): warning C4244: '=': conversion from 'double' to 'int', possible loss of data
+c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(55): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(56): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(57): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(58): warning C4244: 'argument': conversion from 'double' to 'GLint', possible loss of data
+  CameraObject.cpp
+  Generating Code...
   Camera_test.vcxproj -> C:\Users\saura\Desktop\EC_Project\Camera_test\Debug\Camera_test.exe

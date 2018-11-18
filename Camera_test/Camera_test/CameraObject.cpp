@@ -2,10 +2,6 @@
 // the header file
 
 #include <iostream>
-#include <sstream>			// ostringstream
-#include <iomanip>			// setprecision
-#include <stdlib.h>			// abs
-#include <math.h>			// round
 #include "fssimplewindow.h"
 #include "CameraObject.h"
 
@@ -171,63 +167,19 @@ void CameraObject::getRotComponents(double compX, double compZ, double & rotX, d
 }
 
 
-// Computes compass direction in accordance with the heading angle & adds it to the display text
-void CameraObject::getDirText(string &dispText)
-{
-	// Adds char 'E' or 'W' to start of string if angle b/w NE-SE or NW-SW
-	if (abs(heading) > 56.25 && abs(heading) < 123.75)
-		dispText += (-heading > 0) ? " E" : " W";
-
-	// Adds appropriate chars depending on heading angle
-	if (abs(heading) <= 11.25)
-		dispText += " N";
-	else if (abs(heading) > 11.25 && abs(heading) <= 33.75)
-		dispText += " NN";
-	else if (abs(heading) > 33.75 && abs(heading) <= 56.25)
-		dispText += " N";
-	else if (abs(heading) > 56.25 && abs(heading) < 78.75)
-		dispText += "N";
-	else if (abs(heading) > 101.25 && abs(heading) <= 123.75)
-		dispText += "S";
-	else if (abs(heading) > 123.75 && abs(heading) <= 146.25)
-		dispText += " S";
-	else if (abs(heading) > 146.25 && abs(heading) < 168.75)
-		dispText += " SS";
-	else if (abs(heading) >= 168.75)
-		dispText += " S";
-
-	// Adds char 'E' or 'W' to end of string except for when it is not in N, E, W, S direction categories
-	if ((abs(heading) > 11.25 && abs(heading) < 78.75) || (abs(heading) > 101.25 && abs(heading) < 168.75))
-		dispText += (-heading > 0) ? "E" : "W";
-	
-}
-
-
 // Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
-char* CameraObject::printVals(bool debug)
+char* CameraObject::printVals()
 {
-	string dispText;				// String to store relevant text to display on graphics window
+	string dispText = "";		// String to store relevant text to display on graphics window
 
-	if (debug) {
-		dispText = " x=" + to_string(camX);
-		dispText += " y=" + to_string(camY);
-		dispText += " z=" + to_string(camZ);
-	}
-	
-	// Limits precision of heading angle to 2
-	std::ostringstream oss;
-	oss << std::fixed << std::setfill('0') << std::setprecision(2) << abs(heading);
+	dispText = " x=" + to_string(camX);
+	dispText += " y=" + to_string(camY);
+	dispText += " z=" + to_string(camZ);
+	dispText += " h=" + to_string(heading);
+	dispText += " p=" + to_string(pitch);
+	dispText += " b=" + to_string(bank);
 
-	// Displays text in terms of compass direction depending on the current heading angle
-	dispText = oss.str();
-	getDirText(dispText);
-	
-	if (debug) {
-		dispText += " h=" + to_string(heading);
-		dispText += " p=" + to_string(pitch);
-		dispText += " b=" + to_string(bank);
-	}
-
+	// Need to return char array for displaying font
 	char* result = new char[dispText.size() + 1];
 	strcpy_s(result, dispText.size() + 1, dispText.c_str());
 	return result;

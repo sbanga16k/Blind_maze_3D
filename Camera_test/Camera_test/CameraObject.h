@@ -27,11 +27,10 @@ public:
 	void setCameraProjection();	// Sets projection mtx for calc. screen coords using camera's coord system
 	void setCameraTransform();	// Sets mtx for transformation from global coord to camera's coord system
 
-	void moveCamera(double rotInc = 0.5, double translInc = 0.5);	// Moves the camera in accordance with the keypress
+	void moveCamera(double rotInc = 1.0, double translInc = 0.5);	// Moves the camera in accordance with the keypress
 	// Sets input args to components of unit vector in current forward direction along each axis
 	void getForwardComponents(double &endX, double &endY, double &endZ);
 	// Sets input args to components of rotated vector along each axis
 	void getRotComponents(double compX, double compZ, double &rotX, double &rotZ, double rotAngle = 90);
-	void getDirText(std::string & dispText);			// Gets compass direction based on heading angle
-	char* printVals(bool debug = false);		// Prints values of camera's z coord & h angles (for visual aid)
+	char* printVals();		// Prints values of camera's coord & angles (for debugging)
 };
