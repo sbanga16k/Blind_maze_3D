@@ -170,7 +170,7 @@ void CameraObject::getRotComponents(double compX, double compZ, double & rotX, d
 // Prints values of camera's x,y,z coords & h,p,b angles (for debugging)
 char* CameraObject::printVals()
 {
-	string dispText = "";		// String to store relevant text to display on graphics window
+	string dispText = "";		// String to display coords & angles on graphics window for debugging
 
 	dispText = " x=" + to_string(camX);
 	dispText += " y=" + to_string(camY);
