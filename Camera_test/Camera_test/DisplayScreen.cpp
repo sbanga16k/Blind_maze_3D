@@ -15,6 +15,15 @@ Screen::Screen() {
 }
 
 
+// Calls the compass object's move needle function to update its direction
+// with the camera rotation
+void Screen::updateCompass(CameraObject &camera) {
+	if (FsGetKeyState(FSKEY_UP) || FsGetKeyState(FSKEY_RIGHT) || 
+		FsGetKeyState(FSKEY_LEFT) || FsGetKeyState(FSKEY_DOWN))
+	theCompass.moveNeedle(camera);
+}
+
+
 // Displays compass with text on the graphics window
 void Screen::display(CameraObject &camera) {
 	theCompass.drawCompass(camera);		// Draws the compass object on the graphics window

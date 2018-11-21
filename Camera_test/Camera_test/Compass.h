@@ -16,7 +16,8 @@ private:
 	double radCompass, dialWidth;		// Radius of the compass dial, thickness of the dial
 	// Original coords of the needle of compass with coords stored in the format [x, y, ...]
 	vector <double> triangleCoords;
-	// Coords of the needle of compass used for drawing
+	// Coords of the needle of compass used for drawing; needed separately since these coords
+	// are obtained by rotating original coords by current heading angle everytime
 	vector <double> rotTriangleCoords;
 	
 public:

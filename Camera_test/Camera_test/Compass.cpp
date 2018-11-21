@@ -124,8 +124,16 @@ void Compass::moveNeedle(CameraObject &camera)
 	camera.getCameraParams(dummyX, dummyZ, headingAngle, dummyPitchAngle);
 
 	for (int i = 0; i < 4; i++) {
+		// Translating triangle coords to origin before rotation
+		triangleCoords[2 * i] -= 720; triangleCoords[2 * i + 1] -= 80;
+
+		// Rotation of triangle coords about origin
 		Utils::getRotComponents(triangleCoords[2*i], triangleCoords[2*i + 1], 
-			rotTriangleCoords[2*i], rotTriangleCoords[2*i + 1], -headingAngle);
+			rotTriangleCoords[2*i], rotTriangleCoords[2*i + 1], headingAngle);
+
+		// Translating both original & rotated triangle coords back to their location on screen
+		triangleCoords[2 * i] += 720; triangleCoords[2 * i + 1] += 80;
+		rotTriangleCoords[2 * i] += 720; rotTriangleCoords[2 * i + 1] += 80;
 	}
 }
 
@@ -138,9 +146,7 @@ void Compass::drawNeedle()
 
 	glBegin(GL_TRIANGLES);
 	for (int i = 0; i < 3; i++) {
-		//rotTriangleCoords[2 * i] -= 720; rotTriangleCoords[2 * i + 1] -= 80;
 		glVertex2d(rotTriangleCoords[2 * i], rotTriangleCoords[2 * i + 1]);
-		//rotTriangleCoords[2 * i] += 720; rotTriangleCoords[2 * i + 1] += 80;
 	}
 	glEnd();
 	
@@ -149,9 +155,7 @@ void Compass::drawNeedle()
 	
 	glBegin(GL_TRIANGLES);
 	for (int i = 1; i < 4; i++) {
-		//rotTriangleCoords[2 * i] -= 720; rotTriangleCoords[2 * i + 1] -= 80;
 		glVertex2d(rotTriangleCoords[2 * i], rotTriangleCoords[2 * i + 1]);
-		//rotTriangleCoords[2 * i] += 720; rotTriangleCoords[2 * i + 1] += 80;
 	}
 	glEnd();
 }
@@ -160,7 +164,6 @@ void Compass::drawNeedle()
 // Draws the compass object on the graphics window
 void Compass::drawCompass(CameraObject & camera)
 {
-	moveNeedle(camera);
 	drawCircle(centerX, centerY, radCompass, 'w', 1, dialWidth);
 	drawCircle(centerX, centerY, radCompass-5, 'b', 0, dialWidth);
 	drawNeedle();

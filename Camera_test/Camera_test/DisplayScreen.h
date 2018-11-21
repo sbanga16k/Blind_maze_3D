@@ -13,5 +13,6 @@ private:
 
 public:
 	Screen();				// Default constructor
-	void display(CameraObject &camera);		// Displays compass with relevant text on the graphics window
+	void updateCompass(CameraObject &camera);	// Updates the compass needle direction acc. to camera rotation
+	void display(CameraObject &camera);			// Displays compass with relevant text on the graphics window
 };
