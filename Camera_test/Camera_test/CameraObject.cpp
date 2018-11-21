@@ -18,6 +18,7 @@ void CameraObject::initialize()
 	// Initializing camera coord system to coincide with the global coord system
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
+	rotInc = 1.0, translInc = 0.1;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;
@@ -79,7 +80,7 @@ void CameraObject::setCameraTransform()
 
 
 // Rotates & Moves the camera in accordance with the keypress
-void CameraObject::moveCamera(double rotInc, double translInc)
+void CameraObject::moveCamera()
 {
 	// Stores components of unit vector in current North direction along each axis
 	double compX, compY, compZ;

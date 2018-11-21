@@ -13,6 +13,7 @@ class CameraObject
 private:
 	double camX, camY, camZ;		// Camera's local coordinates
 	double heading, pitch, bank;	// Camera's heading, pitch & bank (Euler) angles (in degrees) measured CCW
+	double rotInc, translInc;		// Increments for camera translation & rotation resp
 	double fov, nearZ, farZ;		// Specifying angle for FoV, nearest & farthest depth for object visibility
 
 public:
@@ -27,7 +28,7 @@ public:
 	void setCameraProjection();	// Sets projection mtx for calc. screen coords using camera's coord system
 	void setCameraTransform();	// Sets mtx for transformation from global coord to camera's coord system
 
-	void moveCamera(double rotInc = 1.0, double translInc = 0.5);	// Moves the camera in accordance with the keypress
+	void moveCamera();	// Moves the camera in accordance with the keypress
 	// Sets input args to components of unit vector in current forward direction along each axis
 	void getForwardComponents(double &endX, double &endY, double &endZ);
 	// Sets input args to components of rotated vector along each axis
