@@ -18,7 +18,8 @@ void CameraObject::initialize()
 	// Initializing camera coord system to coincide with the global coord system
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
-	rotInc = 1.0, translInc = 0.1;
+	// Setting increments for camera rotation & translation
+	rotInc = 1.0, translInc = 0.2;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;
@@ -118,32 +119,37 @@ void CameraObject::moveCamera()
 
 	//// Translates camera acc. to WASD key press
 
+	// Variable with scope limited to function which dictates increment of camera translation
+	double newTranslInc;
+
 	// Shift key used for sprinting
 	if (FsGetKeyState(FSKEY_SHIFT))
-		translInc *= 2;
+		newTranslInc = translInc * 2;
+	else
+		newTranslInc = translInc;
 
 	// Moves in North direction
 	if (FsGetKeyState(FSKEY_W)) {
-		camX += compX * translInc;
-		camZ += compZ * translInc;
+		camX += compX * newTranslInc;
+		camZ += compZ * newTranslInc;
 	}
 
 	// Moves in East direction
 	else if (FsGetKeyState(FSKEY_D)) {
-		camX += compRightX * translInc;
-		camZ += compRightZ * translInc;
+		camX += compRightX * newTranslInc;
+		camZ += compRightZ * newTranslInc;
 	}
 
 	// Moves in West direction
 	else if (FsGetKeyState(FSKEY_A)) {
-		camX -= compRightX * translInc;
-		camZ -= compRightZ * translInc;
+		camX -= compRightX * newTranslInc;
+		camZ -= compRightZ * newTranslInc;
 	}
 
 	// Moves in South direction
 	else if (FsGetKeyState(FSKEY_S)) {
-		camX -= compX * translInc;
-		camZ -= compZ * translInc;
+		camX -= compX * newTranslInc;
+		camZ -= compZ * newTranslInc;
 	}
 }
 

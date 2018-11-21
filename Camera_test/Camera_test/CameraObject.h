@@ -13,7 +13,7 @@ class CameraObject
 private:
 	double camX, camY, camZ;		// Camera's local coordinates
 	double heading, pitch, bank;	// Camera's heading, pitch & bank (Euler) angles (in degrees) measured CCW
-	double rotInc, translInc;		// Increments for camera translation & rotation resp
+	double rotInc, translInc;		// Increments for camera rotation & translation resp
 	double fov, nearZ, farZ;		// Specifying angle for FoV, nearest & farthest depth for object visibility
 
 public:
