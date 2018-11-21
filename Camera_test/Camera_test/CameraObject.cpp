@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "fssimplewindow.h"
+#include "Utils.h"
 #include "CameraObject.h"
 
 using namespace std;
@@ -80,6 +81,17 @@ void CameraObject::setCameraTransform()
 }
 
 
+// Sets the input args to components of unit vector in current forward direction along each axis
+void CameraObject::getForwardComponents(double &compX, double &compY, double &compZ)
+{
+	double p = pitch * PI / 180.;
+	double h = heading * PI / 180.;
+	compX = cos(p)*-sin(h);	// (Projection of end of FoV on XZ plane) x (component along X axis)
+	compY = sin(p);					// Projection of end of FoV on Y axis
+	compZ = cos(p)*-cos(h);	// (Projection of end of FoV on XZ plane) x (component along Z axis)
+}
+
+
 // Rotates & Moves the camera in accordance with the keypress
 void CameraObject::moveCamera()
 {
@@ -89,7 +101,7 @@ void CameraObject::moveCamera()
 
 	// Stores components of unit vector in current East direction along each axis
 	double compRightX, compRightZ;
-	this->getRotComponents(compX, compZ, compRightX, compRightZ);
+	Utils::getRotComponents(compX, compZ, compRightX, compRightZ);
 
 	//// Rotates camera acc. to arrow key press in 1 degree increments
 	// Right-left rotation
@@ -151,26 +163,6 @@ void CameraObject::moveCamera()
 		camX -= compX * newTranslInc;
 		camZ -= compZ * newTranslInc;
 	}
-}
-
-
-// Sets the input args to components of unit vector in current forward direction along each axis
-void CameraObject::getForwardComponents(double &compX, double &compY, double &compZ)
-{
-	double p = pitch * PI / 180.;
-	double h = heading * PI / 180.;
-	compX = cos(p)*-sin(h);	// (Projection of end of FoV on XZ plane) x (component along X axis)
-	compY = sin(p);					// Projection of end of FoV on Y axis
-	compZ = cos(p)*-cos(h);	// (Projection of end of FoV on XZ plane) x (component along Z axis)
-}
-
-
-// Sets input args to components of vector along each axis rotated by specified angle (in degrees CCW)
-void CameraObject::getRotComponents(double compX, double compZ, double & rotX, double & rotZ, double rotAngle)
-{
-	double theta = rotAngle * PI / 180.;
-	rotX = compX * cos(theta) - compZ * sin(theta);
-	rotZ = compX * sin(theta) + compZ * cos(theta);
 }
 
 

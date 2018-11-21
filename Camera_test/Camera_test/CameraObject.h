@@ -31,7 +31,5 @@ public:
 	void moveCamera();	// Moves the camera in accordance with the keypress
 	// Sets input args to components of unit vector in current forward direction along each axis
 	void getForwardComponents(double &endX, double &endY, double &endZ);
-	// Sets input args to components of rotated vector along each axis
-	void getRotComponents(double compX, double compZ, double &rotX, double &rotZ, double rotAngle = 90);
 	char* printVals();		// Prints values of camera's coord & angles (for debugging)
 };

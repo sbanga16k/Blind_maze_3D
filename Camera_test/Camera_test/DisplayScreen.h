@@ -4,11 +4,14 @@
 #pragma once
 
 #include "CameraObject.h"
+#include "Compass.h"
 
 class Screen {
+
+private:
+	Compass theCompass;		// The compass object
+
 public:
-	Screen() {};					// Default constructor
-	// Gets compass direction based on heading angle
-	void getDirText(std::string & dispText, CameraObject &camera);
-	void displayText(CameraObject &camera);				// Displays relevant text on the graphics window
+	Screen();				// Default constructor
+	void display(CameraObject &camera);		// Displays compass with relevant text on the graphics window
 };
