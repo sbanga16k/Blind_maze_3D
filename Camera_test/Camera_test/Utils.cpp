@@ -34,7 +34,7 @@ void Utils::drawCircle(double centerX, double centerY, double rad, char color, b
 	if (fill)
 		glBegin(GL_POLYGON);
 	else {
-		glLineWidth(thickness);
+		glLineWidth((GLfloat)thickness);
 		glBegin(GL_LINE_LOOP);
 	}
 
@@ -54,18 +54,18 @@ void Utils::drawCircle(double centerX, double centerY, double rad, char color, b
 void Utils::drawRect(int boxCenterX, int boxCenterY, int boxSizeX, int boxSizeY, char boxColor, bool fill)
 {
 	// Coordinates for bottom left corner of rectangle
-	double botLeftX = boxCenterX - boxSizeX / 2.;
-	double botLeftY = boxCenterY - boxSizeY / 2.;
+	float botLeftX = boxCenterX - boxSizeX / 2.0f;
+	float botLeftY = boxCenterY - boxSizeY / 2.0f;
 
 	// Draws rectangle of desired color
 	if (boxColor == 'r')
-		glColor3f(1.0, 0.0, 0.0);
+		glColor3d(1.0, 0.0, 0.0);
 	else if (boxColor == 'v')
-		glColor3f(205 / 255., 215 / 255., 1.);
+		glColor3d(205 / 255., 215 / 255., 1.);
 	else if (boxColor == 'w')
-		glColor3f(220 / 228., 220 / 228., 220 / 228.);
+		glColor3d(220 / 228., 220 / 228., 220 / 228.);
 	else
-		glColor3f(0.0, 1.0, 0.0);
+		glColor3d(0.0, 1.0, 0.0);
 
 	// Draws filled rectangle by default. But can draw hollow rectangle if specify bool=0
 	if (fill)
@@ -89,4 +89,34 @@ void Utils::drawRect(int boxCenterX, int boxCenterY, int boxSizeX, int boxSizeY,
 	}
 
 	glEnd();
+}
+
+
+// Draws ellipsoid at specified location with specified dimensions
+void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs, 
+	float radX, float radY, float radZ, char color)
+{
+	float tStep = (180) / (float)numLats;
+	float sStep = (180) / (float)numLongs;
+
+	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);		// Draws as wireframe
+	for (float t = -90; t <= 90 + .0001; t += tStep)
+	{
+		// Sets color of ellipsoid
+		if (color == 'p')
+			glColor3ub(75, 0, 130);		// Indigo
+		else
+			glColor3ub(138, 43, 226);	// blueviolet
+
+		// Draws the tesseracted ellipsoid at specified position
+		glBegin(GL_TRIANGLE_STRIP);
+		for (float s = -180; s <= 180 + .0001; s += sStep)
+		{
+			glVertex3f(radX * cos(t) * cos(s) + (float)centerX, 
+				radY * cos(t) * sin(s) + 10, radZ * sin(t) + (float)centerZ);
+			glVertex3f(radX * cos(t + tStep) * cos(s) + (float)centerX,
+				radY * cos(t + tStep) * sin(s) + 10, radZ * sin(t + tStep) + (float)centerZ);
+		}
+		glEnd();
+	}
 }
