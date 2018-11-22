@@ -80,7 +80,7 @@ void Compass::displayText(CameraObject &camera)
 	double camX, camZ, heading, pitch;	// Camera params
 	camera.getCameraParams(camX, camZ, heading, pitch);		// Gets camera params
 
-															// Limits precision of heading angle to 2
+	// Limits precision of heading angle to 2
 	std::ostringstream oss;
 	oss << std::fixed << std::setfill('0') << std::setprecision(2)
 		<< (heading > 0)*(-heading + 360) + (heading <= 0)*(-heading);
@@ -129,7 +129,7 @@ void Compass::moveNeedle(CameraObject &camera)
 
 		// Rotation of triangle coords about origin
 		Utils::getRotComponents(triangleCoords[2*i], triangleCoords[2*i + 1], 
-			rotTriangleCoords[2*i], rotTriangleCoords[2*i + 1], headingAngle);
+			rotTriangleCoords[2*i], rotTriangleCoords[2*i + 1], -headingAngle);
 
 		// Translating both original & rotated triangle coords back to their location on screen
 		triangleCoords[2 * i] += 720; triangleCoords[2 * i + 1] += 80;

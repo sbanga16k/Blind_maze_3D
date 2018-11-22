@@ -95,6 +95,8 @@ void CameraObject::getForwardComponents(double &compX, double &compY, double &co
 // Rotates & Moves the camera in accordance with the keypress
 void CameraObject::moveCamera()
 {
+	//cout << "X " << camX << " Y " << camY << " Z " << camZ << endl;
+
 	// Stores components of unit vector in current North direction along each axis
 	double compX, compY, compZ;
 	this->getForwardComponents(compX, compY, compZ);
