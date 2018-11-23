@@ -41,3 +41,6 @@ float cubeVerts[] = {
 	-0.5f,  0.5f,  0.5f,  0.0f, 0.0f,
 	-0.5f,  0.5f, -0.5f,  0.0f, 1.0f
 };
+
+unsigned int VBO;
+//glBindBuffer(GL_ARRAY_BUFFER, VBO);
