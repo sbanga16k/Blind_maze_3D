@@ -92,6 +92,8 @@ void Compass::displayText(CameraObject &camera)
 	char* result = new char[dispText.size() + 1];
 	strcpy_s(result, dispText.size() + 1, dispText.c_str());
 
+	glDisable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
+
 	// Displays compass direction
 	glColor3ub(255, 0, 0);
 	glRasterPos2i(675, 175);
@@ -112,6 +114,8 @@ void Compass::displayText(CameraObject &camera)
 	glColor3ub(255, 0, 0);
 	glRasterPos2i(25, 50);
 	YsGlDrawFontBitmap8x12("Press ESC to quit game");
+
+	glEnable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
 }
 
 
@@ -164,8 +168,10 @@ void Compass::drawNeedle()
 // Draws the compass object on the graphics window
 void Compass::drawCompass(CameraObject & camera)
 {
+	glDisable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
 	drawCircle(centerX, centerY, radCompass, 'w', 1, dialWidth);
 	drawCircle(centerX, centerY, radCompass-5, 'b', 0, dialWidth);
 	drawNeedle();
+	glEnable(GL_LIGHTING);			// Re-enabling lighting for the rest of the scene
 	//drawRect(centerX, centerY, 50, 25, 'b', 1);
 }

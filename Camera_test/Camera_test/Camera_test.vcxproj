@@ -118,24 +118,30 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Audio.cpp" />
     <ClCompile Include="CameraObject.cpp" />
     <ClCompile Include="Compass.cpp" />
     <ClCompile Include="DisplayScreen.cpp" />
     <ClCompile Include="Flashlight.cpp" />
     <ClCompile Include="fssimplewindow.cpp" />
-    <ClCompile Include="testLighting.cpp" />
+    <ClCompile Include="maze.cpp" />
     <ClCompile Include="testMain.cpp" />
     <ClCompile Include="Utils.cpp" />
     <ClCompile Include="ysglfontdata.c" />
+    <ClCompile Include="yssimplesound.cpp" />
+    <ClCompile Include="yssimplesound_dsound.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Audio.h" />
     <ClInclude Include="CameraObject.h" />
     <ClInclude Include="Compass.h" />
     <ClInclude Include="DisplayScreen.h" />
     <ClInclude Include="Flashlight.h" />
     <ClInclude Include="fssimplewindow.h" />
+    <ClInclude Include="maze.h" />
     <ClInclude Include="Utils.h" />
     <ClInclude Include="ysglfontdata.h" />
+    <ClInclude Include="yssimplesound.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

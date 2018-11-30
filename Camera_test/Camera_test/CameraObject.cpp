@@ -5,6 +5,7 @@
 #include "fssimplewindow.h"
 #include "Utils.h"
 #include "CameraObject.h"
+#include "maze.h"
 
 using namespace std;
 
@@ -20,7 +21,7 @@ void CameraObject::initialize()
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
 	// Setting increments for camera rotation & translation
-	rotInc = 1.0, translInc = 0.2;
+	rotInc = 2.0, translInc = 0.5;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;
@@ -43,6 +44,11 @@ void CameraObject::setCameraAngles(double h, double p) {
 		heading = h;
 	if (p != INF)
 		pitch = p;
+}
+
+// Gets camera position
+void CameraObject::getCameraPos(double & x, double & y, double & z) {
+	x = camX; y = camY; z = camZ;
 }
 
 // Gets camera params
@@ -135,6 +141,7 @@ void CameraObject::moveCamera()
 
 	// Variable with scope limited to function which dictates increment of camera translation
 	double newTranslInc;
+	double camX_temp, camZ_temp;
 
 	// Shift key used for sprinting
 	if (FsGetKeyState(FSKEY_SHIFT))
@@ -144,26 +151,65 @@ void CameraObject::moveCamera()
 
 	// Moves in North direction
 	if (FsGetKeyState(FSKEY_W)) {
-		camX += compX * newTranslInc;
-		camZ += compZ * newTranslInc;
-	}
-
-	// Moves in East direction
-	else if (FsGetKeyState(FSKEY_D)) {
-		camX += compRightX * newTranslInc;
-		camZ += compRightZ * newTranslInc;
-	}
-
-	// Moves in West direction
-	else if (FsGetKeyState(FSKEY_A)) {
-		camX -= compRightX * newTranslInc;
-		camZ -= compRightZ * newTranslInc;
+		camX_temp = camX + compX * newTranslInc;
+		camZ_temp = camZ + compZ * newTranslInc;
+		detectCollision(camZ_temp, camX_temp);
 	}
 
 	// Moves in South direction
 	else if (FsGetKeyState(FSKEY_S)) {
-		camX -= compX * newTranslInc;
-		camZ -= compZ * newTranslInc;
+		camX_temp = camX - compX * newTranslInc;
+		camZ_temp = camZ - compZ * newTranslInc;
+		detectCollision(camZ_temp, camX_temp);
+	}
+
+	// Moves in East direction
+	if (FsGetKeyState(FSKEY_D)) {
+		camX_temp = camX + compRightX * newTranslInc;
+		camZ_temp = camZ + compRightZ * newTranslInc;
+		detectCollision(camZ_temp, camX_temp);
+	}
+
+	// Moves in West direction
+	else if (FsGetKeyState(FSKEY_A)) {
+		camX_temp = camX - compRightX * newTranslInc;
+		camZ_temp = camZ - compRightZ * newTranslInc;
+		detectCollision(camZ_temp, camX_temp);
+	}
+}
+
+
+void CameraObject::detectCollision(double &camZ_temp, double &camX_temp)
+{
+	double scale = getFactor();
+	int c = (int)(camZ_temp / scale);
+	int d = (int)(camX_temp / scale);
+
+	if (getValMat(c, d) == 1)
+	{
+		camX = camX_temp;
+		camZ = camZ_temp;
+	}
+	if (getValMat(c, d) == 2 || getValMat(c, d) == 7) // (&& c==1 && d==20)
+	{
+		//camX_temp = 5; camZ_temp = 5; 
+		camX = 3; camZ = 3;
+		heading = 170;
+	}
+	if (getValMat(c, d) == 3 || getValMat(c, d) == 5)
+	{
+		camX = 72; camZ = 12;
+		heading = 0;
+	}
+	if (getValMat(c, d) == 6)   //route to 4
+	{
+		camX = 48; camZ = 39;
+		heading = 0;
+	}
+	if (getValMat(c, d) == 4)
+	{
+		camX = 51; camZ = 81;
+		heading = 0;
 	}
 }
 
@@ -184,4 +230,77 @@ char* CameraObject::printVals()
 	char* result = new char[dispText.size() + 1];
 	strcpy_s(result, dispText.size() + 1, dispText.c_str());
 	return result;
+}
+
+
+// Moves the camera in accordance with the keypress (FOR FLASHLIGHT)
+void CameraObject::moveCameraFlashlight()
+{
+	double compX, compY, compZ;
+	this->getForwardComponents(compX, compY, compZ);
+
+	// Stores components of unit vector in current East direction along each axis
+	double compRightX, compRightZ;
+	Utils::getRotComponents(compX, compZ, compRightX, compRightZ);
+
+	//// Rotates camera acc. to arrow key press in 1 degree increments
+	// Right-left rotation
+	if (FsGetKeyState(FSKEY_RIGHT)) {
+		heading -= rotInc;
+	}
+	else if (FsGetKeyState(FSKEY_LEFT)) {
+		heading += rotInc;
+	}
+
+	// Camera angle clipped to be in the range of [-180,180] w/o affecting camera motion
+	if (heading > 180)
+		heading = -180 + (heading - 180);
+	else if (heading < -180)
+		heading = 180 + (heading + 180);
+
+	// Up-down rotation
+	// Upward rot capped at 10 deg, downward rot capped at -20 deg
+	if (FsGetKeyState(FSKEY_UP)) {
+		if (pitch < 10)
+			pitch += rotInc;
+	}
+	else if (FsGetKeyState(FSKEY_DOWN)) {
+		if (pitch > -20)
+			pitch -= rotInc;
+	}
+
+	//// Translates camera acc. to WASD key press
+
+	// Variable with scope limited to function which dictates increment of camera translation
+	double newTranslInc;
+
+	// Shift key used for sprinting
+	if (FsGetKeyState(FSKEY_SHIFT))
+		newTranslInc = translInc * 2;
+	else
+		newTranslInc = translInc;
+
+	// Moves in North direction
+	if (FsGetKeyState(FSKEY_W)) {
+		camX += compX * newTranslInc;
+		camZ += compZ * newTranslInc;
+	}
+
+	// Moves in South direction
+	else if (FsGetKeyState(FSKEY_S)) {
+		camX += -compX * newTranslInc;
+		camZ += -compZ * newTranslInc;
+	}
+
+	// Moves in East direction
+	if (FsGetKeyState(FSKEY_D)) {
+		camX += compRightX * newTranslInc;
+		camZ += compRightZ * newTranslInc;
+	}
+
+	// Moves in West direction
+	else if (FsGetKeyState(FSKEY_A)) {
+		camX += -compRightX * newTranslInc;
+		camZ += -compRightZ * newTranslInc;
+	}
 }

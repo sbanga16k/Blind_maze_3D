@@ -4,11 +4,12 @@
 
 #include<string>
 #include<limits>
+#include "maze.h"
 
 const double PI = 3.14159265359;
 const double INF = std::numeric_limits<double>::infinity();
 
-class CameraObject
+class CameraObject : public mazeData
 {
 private:
 	double camX, camY, camZ;		// Camera's local coordinates
@@ -22,7 +23,8 @@ public:
 
 	// Sets camera origin as per global coord system
 	void setCameraCoords(double x = 0., double y = 0., double z = 0.);
-	void setCameraAngles(double h = 0., double p = 0.);				// Sets camera angles
+	void setCameraAngles(double h = 0., double p = 0.);			// Sets camera angles
+	void getCameraPos(double &x, double &y, double &z);			// Gets camera position
 	void getCameraParams(double &x, double &z, double &h, double &p);	// Gets camera params
 
 	void setCameraProjection();	// Sets projection mtx for calc. screen coords using camera's coord system
@@ -31,5 +33,8 @@ public:
 	void moveCamera();	// Moves the camera in accordance with the keypress
 	// Sets input args to components of unit vector in current forward direction along each axis
 	void getForwardComponents(double &endX, double &endY, double &endZ);
+	// Detects collision with wall to prevent going into it
+	void detectCollision(double &camZ_temp, double &camX_temp);
 	char* printVals();		// Prints values of camera's coord & angles (for debugging)
+	void moveCameraFlashlight();	// Moves the camera in accordance with the keypress (FOR FLASHLIGHT)
 };

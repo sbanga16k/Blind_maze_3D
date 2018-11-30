@@ -50,50 +50,49 @@ void Utils::drawCircle(double centerX, double centerY, double rad, char color, b
 }
 
 
-// Draws rectangle at specified location with specified dimensions
-void Utils::drawRect(int boxCenterX, int boxCenterY, int boxSizeX, int boxSizeY, char boxColor, bool fill)
-{
-	// Coordinates for bottom left corner of rectangle
-	float botLeftX = boxCenterX - boxSizeX / 2.0f;
-	float botLeftY = boxCenterY - boxSizeY / 2.0f;
-
-	// Draws rectangle of desired color
-	if (boxColor == 'r')
-		glColor3d(1.0, 0.0, 0.0);
-	else if (boxColor == 'v')
-		glColor3d(205 / 255., 215 / 255., 1.);
-	else if (boxColor == 'w')
-		glColor3d(220 / 228., 220 / 228., 220 / 228.);
-	else
-		glColor3d(0.0, 1.0, 0.0);
-
-	// Draws filled rectangle by default. But can draw hollow rectangle if specify bool=0
-	if (fill)
-		glBegin(GL_QUADS);
-	else
-		glBegin(GL_LINE_LOOP);
-
-	// Arrays for storing x & y coordinates for corners of rectangle
-	double recX[4] = { botLeftX, botLeftX + boxSizeX, botLeftX + boxSizeX, botLeftX };
-	double recY[4] = { botLeftY, botLeftY, botLeftY + boxSizeY, botLeftY + boxSizeY };
-
-	// Drawing the rectangle using above defined coordinates
-	for (int i = 0; i < 4; i++)
-	{
-		if (boxColor == 'b')
-			glColor3ub(0, 0, 0);			// Sets color of rectangle to black
-		else
-			glColor3ub(255, 255, 255);		// Sets color of rectangle to white
-
-		glVertex2d(recX[i], recY[i]);
-	}
-
-	glEnd();
-}
-
+//// Draws rectangle at specified location with specified dimensions
+//void Utils::drawRect(int boxCenterX, int boxCenterY, int boxSizeX, int boxSizeY, char boxColor, bool fill)
+//{
+//	// Coordinates for bottom left corner of rectangle
+//	float botLeftX = boxCenterX - boxSizeX / 2.0f;
+//	float botLeftY = boxCenterY - boxSizeY / 2.0f;
+//
+//	// Draws rectangle of desired color
+//	if (boxColor == 'r')
+//		glColor3d(1.0, 0.0, 0.0);
+//	else if (boxColor == 'v')
+//		glColor3d(205 / 255., 215 / 255., 1.);
+//	else if (boxColor == 'w')
+//		glColor3d(220 / 228., 220 / 228., 220 / 228.);
+//	else
+//		glColor3d(0.0, 1.0, 0.0);
+//
+//	// Draws filled rectangle by default. But can draw hollow rectangle if specify bool=0
+//	if (fill)
+//		glBegin(GL_QUADS);
+//	else
+//		glBegin(GL_LINE_LOOP);
+//
+//	// Arrays for storing x & y coordinates for corners of rectangle
+//	double recX[4] = { botLeftX, botLeftX + boxSizeX, botLeftX + boxSizeX, botLeftX };
+//	double recY[4] = { botLeftY, botLeftY, botLeftY + boxSizeY, botLeftY + boxSizeY };
+//
+//	// Drawing the rectangle using above defined coordinates
+//	for (int i = 0; i < 4; i++)
+//	{
+//		if (boxColor == 'b')
+//			glColor3ub(0, 0, 0);			// Sets color of rectangle to black
+//		else
+//			glColor3ub(255, 255, 255);		// Sets color of rectangle to white
+//
+//		glVertex2d(recX[i], recY[i]);
+//	}
+//
+//	glEnd();
+//}
 
 // Draws ellipsoid at specified location with specified dimensions
-void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs, 
+void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs,
 	float radX, float radY, float radZ, char color)
 {
 	float tStep = (180) / (float)numLats;
@@ -108,14 +107,14 @@ void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLo
 		else
 			glColor3ub(138, 43, 226);	// blueviolet
 
-		// Draws the tesseracted ellipsoid at specified position
+										// Draws the tesseracted ellipsoid at specified position
 		glBegin(GL_TRIANGLE_STRIP);
 		for (float s = -180; s <= 180 + .0001; s += sStep)
 		{
-			glVertex3f(radX * cos(t) * cos(s) + (float)centerX, 
-				radY * cos(t) * sin(s) + 10, radZ * sin(t) + (float)centerZ);
+			glVertex3f(radX * cos(t) * cos(s) + (float)centerX,
+				radY * cos(t) * sin(s) + 2.5, radZ * sin(t) + (float)centerZ);
 			glVertex3f(radX * cos(t + tStep) * cos(s) + (float)centerX,
-				radY * cos(t + tStep) * sin(s) + 10, radZ * sin(t + tStep) + (float)centerZ);
+				radY * cos(t + tStep) * sin(s) + 2.5, radZ * sin(t + tStep) + (float)centerZ);
 		}
 		glEnd();
 	}
