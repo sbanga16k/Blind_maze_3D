@@ -1,2 +1,12 @@
-# Ignore .vs folder in Camera_test folder
+# Ignore .vs folders
 Camera_test/.vs/
+test_glut/.vs/
+
+# Ignore extra background audios & misc images
+8 Bit Power! Inspiring Upbeat Game Music by HeatleyBros.wav
+GlitchxCity - The XX Year Journey (Pokemon Remix) (Non Copyrighted).wav
+
+*.jpg
+
+# Ignore misc folders
+blind_maze_src/
