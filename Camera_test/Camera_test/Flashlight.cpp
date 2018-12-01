@@ -41,12 +41,13 @@ Flashlight::Flashlight(const double cameraX, const double cameraY, const double 
 	glLightfv(GL_LIGHT0, GL_SPECULAR, this->specularLight.data());
 	// Setting up the light position
 	glLightfv(GL_LIGHT0, GL_POSITION, this->lightPosition.data());			// Position of the light
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, this->lightDirection.data());	// Direction of light (axis of spotlight cone)
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, this->lightDirection.data());	// Axis of spotlight cone
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, this->lightConeAngle);				// Cone angle for the spotlight
-	//glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0);
-	//glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 1.0);
-	//glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.2);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0);
+	// Specifying parameters for light intensity attenuation with increasing distance from flashlight
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0f);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);
@@ -78,12 +79,13 @@ void Flashlight::updateLightPosition(const double cameraX, const double cameraY,
 	glLightfv(GL_LIGHT0, GL_SPECULAR, this->specularLight.data());
 	// Setting up the light position
 	glLightfv(GL_LIGHT0, GL_POSITION, this->lightPosition.data());			// Position of the light
-	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, this->lightDirection.data());	// Direction of light (axis of spotlight cone)
+	glLightfv(GL_LIGHT0, GL_SPOT_DIRECTION, this->lightDirection.data());	// Axis of spotlight cone
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, this->lightConeAngle);				// Cone angle for the spotlight
-	//glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0);
-	//glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 1.0);
-	//glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.2);
-	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0);
+	// Specifying parameters for light intensity attenuation with increasing distance from flashlight
+	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0f);
 
 	glEnable(GL_LIGHTING);
 	glEnable(GL_LIGHT0);

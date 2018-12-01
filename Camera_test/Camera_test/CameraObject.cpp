@@ -21,7 +21,7 @@ void CameraObject::initialize()
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
 	// Setting increments for camera rotation & translation
-	rotInc = 2.0, translInc = 0.5;
+	rotInc = 5.0, translInc = 0.5;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;

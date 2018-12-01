@@ -45,8 +45,8 @@ void mazeData::drawCuboid(int x_, int y_, int z_)
 	// Specifies material color properties
 	glEnable(GL_COLOR_MATERIAL);
 
-	std::vector<float>blueDiffuseMatParams{ 0.0f, 0.0f, 1.0f, 1.0f },
-		whiteMatParams{ 1.0f, 1.0f, 1.0f, 1.0f }, disableParams{ 0.0f, 0.0f, 0.0f, 1.0f };
+	std::vector<float> blueDiffuseMatParams{ 0.0f, 0.0f, 1.0f, 1.0f };
+	std::vector<float> disableParams{ 0.0f, 0.0f, 0.0f, 1.0f };
 
 	// Define the material type for lighting (only diffuse reflection)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, disableParams.data());
@@ -74,7 +74,7 @@ void mazeData::drawCuboid(int x_, int y_, int z_)
 		lightVisible = false;
 
 	if (lightVisible)
-		glColor3f(0.5f, 0.5f, 0.0f);
+		glColor3f(1.0f, 1.0f, 0.0f);
 	else
 		glColor3f(0.025f, 0.025f, 0.0f);
 	
@@ -200,4 +200,28 @@ void mazeData::drawMaze() {
 				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'p');
 		}
 	}
+}
+
+// Draws maze in graphics window
+void mazeData::drawMazeNew(int minI, int maxI, int minJ, int maxJ) {
+	for (int i = minI; i < maxI; i++) {
+
+		for (int j = minJ; j < maxJ; j++) {
+			if (this->getValMat(i, j) == 0)
+				this->drawCuboid(j, 2, i);
+			if (this->getValMat(i, j) >= 2 && this->getValMat(i, j) <= 7)
+			{
+				this->drawEllipsoid(factor*j, factor*i, 6, 6, 4.0f / 3, 10.0f / 3, 3.0f / 3, 'p');
+				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'v');
+			}
+			if (this->getValMat(i, j) == 8)
+				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'p');
+		}
+	}
+}
+
+
+// Enabling multi-threading
+void mazeData::threadEntry(mazeData * mazePtr, int minI, int maxI, int minJ, int maxJ) {
+	mazePtr->drawMazeNew(minI, maxI, minJ, maxJ);
 }
