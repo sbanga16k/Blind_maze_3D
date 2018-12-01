@@ -1,11 +1,4 @@
 #pragma once
-#include <stdio.h>
-#include <iostream>
-#include <string>
-#include <ctype.h>
-#include <stdlib.h>
-#include <fstream>
-#include "fssimplewindow.h"
 
 class mazeData
 {

@@ -13,7 +13,7 @@ Flashlight::Flashlight() {
 	// Set light intensiy and colour
 	this->ambientLight = std::vector<float>{0.0f, 0.0f, 0.0f, 1.0f};
 	this->diffuseLight = std::vector<float>{1.0f, 1.0f, 1.0f, 1.0f};
-	this->specularLight = std::vector<float>{0.0f, 0.0f, 0.0f, 1.0f};
+	this->specularLight = std::vector<float>{1.0f, 1.0f, 1.0f, 1.0f};
 }
 
 // Sets up the flashlight
@@ -45,8 +45,8 @@ Flashlight::Flashlight(const double cameraX, const double cameraY, const double 
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, this->lightConeAngle);				// Cone angle for the spotlight
 	// Specifying parameters for light intensity attenuation with increasing distance from flashlight
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
-	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.01f);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0002f);
 	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0f);
 
 	glEnable(GL_LIGHTING);
@@ -83,8 +83,8 @@ void Flashlight::updateLightPosition(const double cameraX, const double cameraY,
 	glLightf(GL_LIGHT0, GL_SPOT_CUTOFF, this->lightConeAngle);				// Cone angle for the spotlight
 	// Specifying parameters for light intensity attenuation with increasing distance from flashlight
 	glLightf(GL_LIGHT0, GL_CONSTANT_ATTENUATION, 1.0f);
-	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.1f);
-	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0f);
+	glLightf(GL_LIGHT0, GL_LINEAR_ATTENUATION, 0.01f);
+	glLightf(GL_LIGHT0, GL_QUADRATIC_ATTENUATION, 0.0002f);
 	glLightf(GL_LIGHT0, GL_SPOT_EXPONENT, 2.0f);
 
 	glEnable(GL_LIGHTING);

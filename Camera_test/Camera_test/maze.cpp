@@ -1,9 +1,5 @@
-#include <stdio.h> 
 #include <iostream>
 #include <vector>
-#include <string>
-#include <ctype.h>
-#include <stdlib.h>
 #include <fstream>
 #include "maze.h"
 #include "fssimplewindow.h"
