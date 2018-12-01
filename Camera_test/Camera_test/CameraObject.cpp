@@ -46,15 +46,15 @@ void CameraObject::setCameraAngles(double h, double p) {
 		pitch = p;
 }
 
+
 // Gets camera position
 void CameraObject::getCameraPos(double & x, double & y, double & z) {
 	x = camX; y = camY; z = camZ;
 }
 
-// Gets camera params
-void CameraObject::getCameraParams(double & x, double & z, double & h, double & p) {
-	x = camX; z = camZ;
-	h = heading; p = pitch; 
+// Gets camera position
+void CameraObject::getCameraAngles(double & h, double & p, double & b) {
+	h = heading; p = pitch; b = bank;
 }
 
 
@@ -179,35 +179,33 @@ void CameraObject::moveCamera()
 }
 
 
+// Checks for collision detection to prevent going into the walls
 void CameraObject::detectCollision(double &camZ_temp, double &camX_temp)
 {
 	double scale = getFactor();
 	int c = (int)(camZ_temp / scale);
 	int d = (int)(camX_temp / scale);
 
-	if (getValMat(c, d) == 1)
-	{
+	// Indicates valid position
+	if (getValMat(c, d) == 1) {
 		camX = camX_temp;
 		camZ = camZ_temp;
 	}
-	if (getValMat(c, d) == 2 || getValMat(c, d) == 7) // (&& c==1 && d==20)
-	{
-		//camX_temp = 5; camZ_temp = 5; 
+
+	// Teleports positions when going through portals
+	if (getValMat(c, d) == 2 || getValMat(c, d) == 7) {
 		camX = 3; camZ = 3;
 		heading = 170;
 	}
-	if (getValMat(c, d) == 3 || getValMat(c, d) == 5)
-	{
+	if (getValMat(c, d) == 3 || getValMat(c, d) == 5) {
 		camX = 72; camZ = 12;
 		heading = 0;
 	}
-	if (getValMat(c, d) == 6)   //route to 4
-	{
+	if (getValMat(c, d) == 6) {
 		camX = 48; camZ = 39;
 		heading = 0;
 	}
-	if (getValMat(c, d) == 4)
-	{
+	if (getValMat(c, d) == 4) {
 		camX = 51; camZ = 81;
 		heading = 0;
 	}
@@ -230,77 +228,4 @@ char* CameraObject::printVals()
 	char* result = new char[dispText.size() + 1];
 	strcpy_s(result, dispText.size() + 1, dispText.c_str());
 	return result;
-}
-
-
-// Moves the camera in accordance with the keypress (FOR FLASHLIGHT)
-void CameraObject::moveCameraFlashlight()
-{
-	double compX, compY, compZ;
-	this->getForwardComponents(compX, compY, compZ);
-
-	// Stores components of unit vector in current East direction along each axis
-	double compRightX, compRightZ;
-	Utils::getRotComponents(compX, compZ, compRightX, compRightZ);
-
-	//// Rotates camera acc. to arrow key press in 1 degree increments
-	// Right-left rotation
-	if (FsGetKeyState(FSKEY_RIGHT)) {
-		heading -= rotInc;
-	}
-	else if (FsGetKeyState(FSKEY_LEFT)) {
-		heading += rotInc;
-	}
-
-	// Camera angle clipped to be in the range of [-180,180] w/o affecting camera motion
-	if (heading > 180)
-		heading = -180 + (heading - 180);
-	else if (heading < -180)
-		heading = 180 + (heading + 180);
-
-	// Up-down rotation
-	// Upward rot capped at 10 deg, downward rot capped at -20 deg
-	if (FsGetKeyState(FSKEY_UP)) {
-		if (pitch < 10)
-			pitch += rotInc;
-	}
-	else if (FsGetKeyState(FSKEY_DOWN)) {
-		if (pitch > -20)
-			pitch -= rotInc;
-	}
-
-	//// Translates camera acc. to WASD key press
-
-	// Variable with scope limited to function which dictates increment of camera translation
-	double newTranslInc;
-
-	// Shift key used for sprinting
-	if (FsGetKeyState(FSKEY_SHIFT))
-		newTranslInc = translInc * 2;
-	else
-		newTranslInc = translInc;
-
-	// Moves in North direction
-	if (FsGetKeyState(FSKEY_W)) {
-		camX += compX * newTranslInc;
-		camZ += compZ * newTranslInc;
-	}
-
-	// Moves in South direction
-	else if (FsGetKeyState(FSKEY_S)) {
-		camX += -compX * newTranslInc;
-		camZ += -compZ * newTranslInc;
-	}
-
-	// Moves in East direction
-	if (FsGetKeyState(FSKEY_D)) {
-		camX += compRightX * newTranslInc;
-		camZ += compRightZ * newTranslInc;
-	}
-
-	// Moves in West direction
-	else if (FsGetKeyState(FSKEY_A)) {
-		camX += -compRightX * newTranslInc;
-		camZ += -compRightZ * newTranslInc;
-	}
 }

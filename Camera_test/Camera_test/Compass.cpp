@@ -40,8 +40,9 @@ Compass::Compass() {
 // Computes compass direction in accordance with the heading angle & adds it to the display text
 void Compass::getDirText(string & dispText, CameraObject &camera)
 {
-	double camX, camZ, heading, pitch;	// Camera params
-	camera.getCameraParams(camX, camZ, heading, pitch);		// Gets camera params
+	double camX, camY, camZ, heading, pitch, bank;	// Camera params
+	camera.getCameraPos(camX, camY, camZ);			// Gets camera pos
+	camera.getCameraAngles(heading, pitch, bank);	// Gets camera angles
 
 															// Adds char 'E' or 'W' to start of string if angle b/w NE-SE or NW-SW
 	if (absVal(heading) > 56.25 && absVal(heading) < 123.75)
@@ -66,7 +67,8 @@ void Compass::getDirText(string & dispText, CameraObject &camera)
 		dispText += " S";
 
 	// Adds char 'E' or 'W' to end of string except for when it is not in N, E, W, S direction categories
-	if ((absVal(heading) > 11.25 && absVal(heading) < 78.75) || (absVal(heading) > 101.25 && absVal(heading) < 168.75))
+	if ((absVal(heading) > 11.25 && absVal(heading) < 78.75) || 
+		(absVal(heading) > 101.25 && absVal(heading) < 168.75))
 		dispText += (-heading > 0) ? "E" : "W";
 
 }
@@ -77,8 +79,9 @@ void Compass::displayText(CameraObject &camera)
 {
 	string dispText = "";		// String to store relevant text to display on graphics window
 
-	double camX, camZ, heading, pitch;	// Camera params
-	camera.getCameraParams(camX, camZ, heading, pitch);		// Gets camera params
+	double camX, camY, camZ, heading, pitch, bank;	// Camera params
+	camera.getCameraPos(camX, camY, camZ);			// Gets camera pos
+	camera.getCameraAngles(heading, pitch, bank);	// Gets camera angles
 
 	// Limits precision of heading angle to 2
 	std::ostringstream oss;
@@ -124,8 +127,8 @@ void Compass::displayText(CameraObject &camera)
 void Compass::moveNeedle(CameraObject &camera)
 {	//by rotating original coords
 
-	double dummyX, dummyZ, headingAngle, dummyPitchAngle;
-	camera.getCameraParams(dummyX, dummyZ, headingAngle, dummyPitchAngle);
+	double headingAngle, PitchAngle, BankAngle;
+	camera.getCameraAngles(headingAngle, PitchAngle, BankAngle);
 
 	for (int i = 0; i < 4; i++) {
 		// Translating triangle coords to origin before rotation

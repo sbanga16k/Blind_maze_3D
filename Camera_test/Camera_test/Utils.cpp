@@ -95,6 +95,8 @@ void Utils::drawCircle(double centerX, double centerY, double rad, char color, b
 void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs,
 	float radX, float radY, float radZ, char color)
 {
+	glDisable(GL_LIGHTING);
+
 	float tStep = (180) / (float)numLats;
 	float sStep = (180) / (float)numLongs;
 
@@ -118,4 +120,5 @@ void Utils::drawEllipsoid(double centerX, double centerZ, int numLats, int numLo
 		}
 		glEnd();
 	}
+	glEnable(GL_LIGHTING);
 }

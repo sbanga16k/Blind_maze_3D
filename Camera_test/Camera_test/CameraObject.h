@@ -25,8 +25,7 @@ public:
 	void setCameraCoords(double x = 0., double y = 0., double z = 0.);
 	void setCameraAngles(double h = 0., double p = 0.);			// Sets camera angles
 	void getCameraPos(double &x, double &y, double &z);			// Gets camera position
-	void getCameraParams(double &x, double &z, double &h, double &p);	// Gets camera params
-
+	void getCameraAngles(double & h, double & p, double & b);	// Gets camera angles
 	void setCameraProjection();	// Sets projection mtx for calc. screen coords using camera's coord system
 	void setCameraTransform();	// Sets mtx for transformation from global coord to camera's coord system
 
@@ -36,5 +35,4 @@ public:
 	// Detects collision with wall to prevent going into it
 	void detectCollision(double &camZ_temp, double &camX_temp);
 	char* printVals();		// Prints values of camera's coord & angles (for debugging)
-	void moveCameraFlashlight();	// Moves the camera in accordance with the keypress (FOR FLASHLIGHT)
 };

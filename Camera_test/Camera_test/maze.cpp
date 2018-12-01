@@ -143,46 +143,33 @@ void mazeData::drawCuboid(int x_, int y_, int z_)
 void mazeData::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs,
 	float radX, float radY, float radZ, char color)
 {
-	glEnable(GL_COLOR_MATERIAL);
-	std::vector<float>diffuseMatParams,
-		whiteMatParams{ 1.0f, 1.0f, 1.0f, 1.0f }, disableParams{ 0.0f, 0.0f, 0.0f, 1.0f };
-
+	glDisable(GL_LIGHTING);
+	
 	float tStep = (180) / (float)numLats;
 	float sStep = (180) / (float)numLongs;
 
 	//glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);		// Draws as wireframe
 	for (float t = -90; t <= 90 + .0001; t += tStep)
 	{
-		if (color == 'p') {
+		if (color == 'p')
 			glColor3ub(75, 0, 130);		// Indigo
-			diffuseMatParams = std::vector<float>{ 75.0f / 255.0f, 0.0f, 130.0f / 255.0f, 1.0f };
-		}
-		else {
+		else
 			glColor3ub(138, 43, 226);	// blueviolet
-			diffuseMatParams = std::vector<float>{ 138.0f / 255.0f, 43.0f / 255.0f, 226.0f / 255.0f, 1.0f };
-		}
-
-		// Draws the tesseracted ellipsoid at specified position
-		glBegin(GL_TRIANGLE_STRIP);
-
-		// Define the material type for lighting (only diffuse reflection)
-		glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, disableParams.data());
-		glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMatParams.data());
-		glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, disableParams.data());
-		glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
 
 		// Draws the tesseracted ellipsoid at specified position
 		glBegin(GL_TRIANGLE_STRIP);
 		for (float s = -180; s <= 180 + .0001; s += sStep)
 		{
 			glVertex3d(radX * cos(t) * cos(s) + centerX,
-				radY * cos(t) * sin(s) + 2.5, radZ * sin(t) + centerZ);
+				radY * cos(t) * sin(s) + 5, radZ * sin(t) + centerZ);
 			glVertex3d(radX * cos(t + tStep) * cos(s) + centerX,
-				radY * cos(t + tStep) * sin(s) + 2.5, radZ * sin(t + tStep) + centerZ);
+				radY * cos(t + tStep) * sin(s) + 5, radZ * sin(t + tStep) + centerZ);
 		}
 		glEnd();
 	}
+	glEnable(GL_LIGHTING);
 }
+
 
 // Draws maze in graphics window
 void mazeData::drawMaze() {
@@ -193,14 +180,15 @@ void mazeData::drawMaze() {
 				this->drawCuboid(j, 2, i);
 			if (this->getValMat(i, j) >= 2 && this->getValMat(i, j) <= 7)
 			{
-				this->drawEllipsoid(factor*j, factor*i, 6, 6, 4.0f / 3, 10.0f / 3, 3.0f / 3, 'p');
-				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'v');
+				this->drawEllipsoid(factor*j, factor*i, 6, 6, 6.0f / 3, 18.0f / 3, 6.0f / 3, 'p');
+				this->drawEllipsoid(factor*j, factor*i, 10, 10, 5.5f / 3, 17.0f / 3, 5.5f / 3, 'v');
 			}
 			if (this->getValMat(i, j) == 8)
 				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'p');
 		}
 	}
 }
+
 
 // Draws maze in graphics window
 void mazeData::drawMazeNew(int minI, int maxI, int minJ, int maxJ) {
