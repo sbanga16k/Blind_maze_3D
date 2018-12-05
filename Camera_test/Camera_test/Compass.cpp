@@ -116,7 +116,7 @@ void Compass::displayText(CameraObject &camera)
 	// Displays text about how to quit the game
 	glColor3ub(255, 0, 0);
 	glRasterPos2i(25, 50);
-	YsGlDrawFontBitmap8x12("Press ESC to quit game");
+	YsGlDrawFontBitmap8x12("Press ESC to pull up GAME MENU");
 
 	glEnable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
 }

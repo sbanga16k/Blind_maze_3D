@@ -6,7 +6,10 @@ Camera_test/.vs/
 GlitchxCity - The XX Year Journey (Pokemon Remix) (Non Copyrighted).wav
 
 *.jpg
+MapTestNew.txt
 
 # Ignore misc folders
 blind_maze_src/
 Misc_files/
+glew_freeglut/
+Project1/

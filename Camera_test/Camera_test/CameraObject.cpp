@@ -21,7 +21,7 @@ void CameraObject::initialize()
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
 	// Setting increments for camera rotation & translation
-	rotInc = 5.0, translInc = 0.5;
+	rotInc = 2.5, translInc = 0.25;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;
@@ -99,7 +99,7 @@ void CameraObject::getForwardComponents(double &compX, double &compY, double &co
 
 
 // Rotates & Moves the camera in accordance with the keypress
-void CameraObject::moveCamera()
+void CameraObject::moveCamera(Sounds &audio, bool &terminate, YsSoundPlayer &backgroundPlayer)
 {
 	//cout << "X " << camX << " Y " << camY << " Z " << camZ << endl;
 
@@ -145,7 +145,7 @@ void CameraObject::moveCamera()
 
 	// Shift key used for sprinting
 	if (FsGetKeyState(FSKEY_SHIFT))
-		newTranslInc = translInc * 2;
+		newTranslInc = translInc * 2.5;
 	else
 		newTranslInc = translInc;
 
@@ -153,34 +153,34 @@ void CameraObject::moveCamera()
 	if (FsGetKeyState(FSKEY_W)) {
 		camX_temp = camX + compX * newTranslInc;
 		camZ_temp = camZ + compZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp);
+		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
 	}
 
 	// Moves in South direction
 	else if (FsGetKeyState(FSKEY_S)) {
 		camX_temp = camX - compX * newTranslInc;
 		camZ_temp = camZ - compZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp);
+		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
 	}
 
 	// Moves in East direction
 	if (FsGetKeyState(FSKEY_D)) {
 		camX_temp = camX + compRightX * newTranslInc;
 		camZ_temp = camZ + compRightZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp);
+		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
 	}
 
 	// Moves in West direction
 	else if (FsGetKeyState(FSKEY_A)) {
 		camX_temp = camX - compRightX * newTranslInc;
 		camZ_temp = camZ - compRightZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp);
+		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
 	}
 }
 
 
 // Checks for collision detection to prevent going into the walls
-void CameraObject::detectCollision(double &camZ_temp, double &camX_temp)
+void CameraObject::detectCollision(double &camZ_temp, double &camX_temp, Sounds &audio, bool &terminate, YsSoundPlayer &backgroundPlayer)
 {
 	double scale = getFactor();
 	int c = (int)(camZ_temp / scale);
@@ -192,22 +192,38 @@ void CameraObject::detectCollision(double &camZ_temp, double &camX_temp)
 		camZ = camZ_temp;
 	}
 
-	// Teleports positions when going through portals
+	// Teleports positions when going through portals & plays portal sounds
 	if (getValMat(c, d) == 2 || getValMat(c, d) == 7) {
+		audio.playSound(4);
 		camX = 3; camZ = 3;
 		heading = 170;
 	}
 	if (getValMat(c, d) == 3 || getValMat(c, d) == 5) {
+		audio.playSound(4);
 		camX = 72; camZ = 12;
 		heading = 0;
 	}
 	if (getValMat(c, d) == 6) {
+		audio.playSound(4);
 		camX = 48; camZ = 39;
 		heading = 0;
 	}
 	if (getValMat(c, d) == 4) {
+		audio.playSound(4);
 		camX = 51; camZ = 81;
 		heading = 0;
+	}
+
+	// Check for reaching goal; display winning screen & play victory music
+	if (getValMat(c, d) == 8) {
+		YsSoundPlayer soundPlayer;
+		YsSoundPlayer::SoundData wav;
+		if (YSOK != wav.LoadWav("Victory Fanfare.wav"))
+			cout << "Failed to read" << endl;
+
+		soundPlayer.Start();
+		soundPlayer.PlayBackground(wav, false);
+		Utils::loadMenu(terminate, *this, 3, backgroundPlayer);
 	}
 }
 

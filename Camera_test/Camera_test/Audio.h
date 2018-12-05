@@ -12,5 +12,5 @@ public:
 public:
 	void loadSound(const char Sound[], int index);
 	void playSound(int index);
-	void movementSound();
+	void playerSound();
 };

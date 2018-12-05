@@ -10,6 +10,10 @@ mazeData::mazeData()
 	factor = 3;
 	load((char *)"MapTest.txt", mazeLen);
 	lightVisible = false;
+	std::chrono::time_point<std::chrono::system_clock> a, b;
+	b = std::chrono::system_clock::now();
+	a = std::chrono::system_clock::now();
+	elapsed = a - b;
 }
 
 void mazeData::load(char* name, int len)
@@ -36,7 +40,7 @@ int mazeData::getFactor()
 	return factor;
 }
 
-void mazeData::drawCuboid(int x_, int y_, int z_)
+void mazeData::drawCuboid(int x_, int y_, int z_, Sounds &audio)
 {
 	// Specifies material color properties
 	glEnable(GL_COLOR_MATERIAL);
@@ -60,23 +64,42 @@ void mazeData::drawCuboid(int x_, int y_, int z_)
 
 	//float stepX = cuboidLen / (float)numDivisions, stepY = initY / 40.0f, stepZ = stepX;
 	float stepX = cuboidLen / (float)numDivisions, stepY = initY / 15.0f, stepZ = stepX;
-	
+
 	FsPollDevice();
 	int key = FsInkey();
 
 	if (key == FSKEY_F && !lightVisible)
+	{
 		lightVisible = true;
+		audio.playSound(2);
+		store = elapsed;
+		start = std::chrono::system_clock::now();
+	}
 	else if (key == FSKEY_F && lightVisible)
+	{
 		lightVisible = false;
+		audio.playSound(2);
+	}
+	if (lightVisible == true)
+	{
+		end = std::chrono::system_clock::now();
+		elapsed = store + end - start;
+		//	printf("%f \n", elapsed);
+	}
+
+	if (elapsed.count()>120)
+	{
+		lightVisible = false;
+	}
 
 	if (lightVisible)
 		glColor3f(1.0f, 1.0f, 0.0f);
 	else
 		glColor3f(0.025f, 0.025f, 0.0f);
-	
+
 	// Front face
 	float z = initZ + cuboidLen;
-	
+
 	for (float x = initX; x < initX + cuboidLen; x += stepX) {
 		for (float y = 0.0f; y < initY; y += stepY) {
 			glBegin(GL_QUADS);
@@ -136,11 +159,11 @@ void mazeData::drawCuboid(int x_, int y_, int z_)
 
 
 // Draws ellipsoid at specified location with specified dimensions
-void mazeData::drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs,
+void mazeData::drawEllipsoid(double centerX, double centerZ, float elevation, int numLats, int numLongs,
 	float radX, float radY, float radZ, char color)
 {
 	glDisable(GL_LIGHTING);
-	
+
 	float tStep = (180) / (float)numLats;
 	float sStep = (180) / (float)numLongs;
 
@@ -149,17 +172,26 @@ void mazeData::drawEllipsoid(double centerX, double centerZ, int numLats, int nu
 	{
 		if (color == 'p')
 			glColor3ub(75, 0, 130);		// Indigo
-		else
+		else if (color == 'v')
 			glColor3ub(138, 43, 226);	// blueviolet
+		else if (color == 'g')
+			glColor3ub(255, 200, 25);	// gold
+		else if (color == 'y')
+			glColor3ub(229, 181, 25);	// dull gold
+		else if (color == 'w')
+			glColor3ub(255, 255, 255);	// white
+		else
+			glColor3ub(0, 0, 0);	// black
+		
 
 		// Draws the tesseracted ellipsoid at specified position
 		glBegin(GL_TRIANGLE_STRIP);
 		for (float s = -180; s <= 180 + .0001; s += sStep)
 		{
 			glVertex3d(radX * cos(t) * cos(s) + centerX,
-				radY * cos(t) * sin(s) + 5, radZ * sin(t) + centerZ);
+				radY * cos(t) * sin(s) + elevation, radZ * sin(t) + centerZ);
 			glVertex3d(radX * cos(t + tStep) * cos(s) + centerX,
-				radY * cos(t + tStep) * sin(s) + 5, radZ * sin(t + tStep) + centerZ);
+				radY * cos(t + tStep) * sin(s) + elevation, radZ * sin(t + tStep) + centerZ);
 		}
 		glEnd();
 	}
@@ -168,44 +200,54 @@ void mazeData::drawEllipsoid(double centerX, double centerZ, int numLats, int nu
 
 
 // Draws maze in graphics window
-void mazeData::drawMaze() {
+void mazeData::drawMaze(Sounds &audio) {
 	for (int i = 0; i < mazeLen; i++) {
 
 		for (int j = 0; j < mazeLen; j++) {
 			if (this->getValMat(i, j) == 0)
-				this->drawCuboid(j, 2, i);
+				this->drawCuboid(j, 2, i, audio);
 			if (this->getValMat(i, j) >= 2 && this->getValMat(i, j) <= 7)
 			{
-				this->drawEllipsoid(factor*j, factor*i, 6, 6, 6.0f / 3, 18.0f / 3, 6.0f / 3, 'p');
-				this->drawEllipsoid(factor*j, factor*i, 10, 10, 5.5f / 3, 17.0f / 3, 5.5f / 3, 'v');
+				this->drawEllipsoid(factor*j, factor*i, 5.1f, 6, 6, 6.0f / 3, 18.0f / 3, 6.0f / 3, 'p');
+				this->drawEllipsoid(factor*j, factor*i, 5.1f, 10, 10, 5.5f / 3, 17.0f / 3, 5.5f / 3, 'v');
 			}
+			// Drawing BB-8 robot (Changed design to not look like a snowman xD - Saurabh)
 			if (this->getValMat(i, j) == 8)
-				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'p');
+			{
+				this->drawEllipsoid(factor*j, factor*i, 1.5f, 20, 20, 1.5f, 1.5f, 1.5f, 'g');
+				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 2.0f, 0.75f, 0.75f, 'b');
+				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 1.8f, 1.0f, 1.0f, 'w');
+				this->drawEllipsoid(factor*j, factor*i, 3.25f, 20, 20, 1.0f, 1.0f, 1.0f, 'y');
+				this->drawEllipsoid(factor*j, factor*i, 3.5f, 10, 10, 1.2f, 0.35f, 0.35f, 'w');
+			}
 		}
 	}
 }
 
 
 // Draws maze in graphics window
-void mazeData::drawMazeNew(int minI, int maxI, int minJ, int maxJ) {
-	for (int i = minI; i < maxI; i++) {
-
-		for (int j = minJ; j < maxJ; j++) {
-			if (this->getValMat(i, j) == 0)
-				this->drawCuboid(j, 2, i);
-			if (this->getValMat(i, j) >= 2 && this->getValMat(i, j) <= 7)
-			{
-				this->drawEllipsoid(factor*j, factor*i, 6, 6, 4.0f / 3, 10.0f / 3, 3.0f / 3, 'p');
-				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'v');
-			}
-			if (this->getValMat(i, j) == 8)
-				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'p');
-		}
-	}
-}
+//void mazeData::drawMazeNew(int minI, int maxI, int minJ, int maxJ) {
+//	for (int i = minI; i < maxI; i++) {
+//
+//		for (int j = minJ; j < maxJ; j++) {
+//			if (this->getValMat(i, j) == 0)
+//				this->drawCuboid(j, 2, i);
+//			if (this->getValMat(i, j) >= 2 && this->getValMat(i, j) <= 7)
+//			{
+//				this->drawEllipsoid(factor*j, factor*i, 6, 6, 4.0f / 3, 10.0f / 3, 3.0f / 3, 'p', 5);
+//				this->drawEllipsoid(factor*j, factor*i, 10, 10, 3.75f / 3, 9.0f / 3, 2.75f / 3, 'v', 5);
+//			}
+//			if (this->getValMat(i, j) == 8)
+//			{
+//				this->drawEllipsoid(factor*j, factor*i, 10, 10, 2.2, 2.2, 2.2, 'p', 2);
+//				this->drawEllipsoid(factor*j, factor*i, 10, 10, 1, 1, 1, 'p',5);
+//			}
+//		}
+//	}
+//}
 
 
 // Enabling multi-threading
-void mazeData::threadEntry(mazeData * mazePtr, int minI, int maxI, int minJ, int maxJ) {
-	mazePtr->drawMazeNew(minI, maxI, minJ, maxJ);
-}
+//void mazeData::threadEntry(mazeData * mazePtr, int minI, int maxI, int minJ, int maxJ) {
+//	mazePtr->drawMazeNew(minI, maxI, minJ, maxJ);
+//}

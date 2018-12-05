@@ -4,8 +4,6 @@
 
 using namespace std;
 
-//YsSoundPlayer::SoundData Sounds::wavData;
-//bool Sounds::soundOK = false;
 YsSoundPlayer Sounds::soundPlayer;
 int key;
 
@@ -26,32 +24,25 @@ void Sounds::playSound(int index)
 		soundPlayer.PlayBackground(wavData[index], true);
 }
 
-void Sounds::movementSound()
+void Sounds::playerSound()
 {
-	//YsSoundPlayer SoundPlayer;
-	//YsSoundPlayer::SoundData wav;
-	//soundPlayer.Start();
 	FsPollDevice();
+
 	key = FsInkey();
-	if (key == FSKEY_W)
+	if (FsGetKeyState(FSKEY_W))
 	{
-		//loadSound("FootSteps.wav");
 		playSound(3);
 	}
-	else if (key == FSKEY_A)
+	else if (FsGetKeyState(FSKEY_A))
 	{
-		//loadSound("FootSteps.wav");
 		playSound(3);
 	}
-	else if (key == FSKEY_S)
+	else if (FsGetKeyState(FSKEY_S))
 	{
-		//loadSound("FootSteps.wav");
 		playSound(3);
 	}
-	else if (key == FSKEY_D)
+	else if (FsGetKeyState(FSKEY_D))
 	{
-		//loadSound("FootSteps.wav");
 		playSound(3);
 	}
 }
-

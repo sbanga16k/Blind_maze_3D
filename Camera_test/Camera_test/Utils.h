@@ -1,4 +1,7 @@
 // Contains declaration of miscallaneous helper functions used across different classes
+#include "CameraObject.h"
+#include "yssimplesound.h"
+
 #pragma once
 
 namespace Utils {
@@ -8,4 +11,6 @@ namespace Utils {
 	void getRotComponents(double compA, double compB, double &rotA, double &rotB, double rotAngle = 90);
 	// Draws circle at specified location with specified radius
 	void drawCircle(double centerX, double centerY, double rad, char color, bool fill, double thickness);
+	// Loads the game menu when 'ESC' key pressed
+	void loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPlayer &backgroundPlayer);
 }
