@@ -1,6 +1,5 @@
 # Ignore .vs folders
 Camera_test/.vs/
-test_glut/.vs/
 
 # Ignore extra background audios & misc images
 8 Bit Power! Inspiring Upbeat Game Music by HeatleyBros.wav

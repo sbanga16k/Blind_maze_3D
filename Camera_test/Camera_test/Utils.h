@@ -8,9 +8,4 @@ namespace Utils {
 	void getRotComponents(double compA, double compB, double &rotA, double &rotB, double rotAngle = 90);
 	// Draws circle at specified location with specified radius
 	void drawCircle(double centerX, double centerY, double rad, char color, bool fill, double thickness);
-	// Draws rectangle at specified location with specified dimensions
-	//void drawRect(int boxCenterX, int boxCenterY, int boxSizeX, int boxSizeY, char boxColor, bool fill);
-	// Draws ellipsoid at specified location with specified dimensions
-	void drawEllipsoid(double centerX, double centerZ, int numLats, int numLongs,
-		float radX, float radY, float radZ, char color);
 }
