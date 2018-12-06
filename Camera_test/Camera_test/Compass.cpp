@@ -75,7 +75,7 @@ void Compass::getDirText(string & dispText, CameraObject &camera)
 
 
 // Displays text on the graphics window
-void Compass::displayText(CameraObject &camera)
+void Compass::displayText(CameraObject &camera, mazeData &mazeObj)
 {
 	string dispText = "";		// String to store relevant text to display on graphics window
 
@@ -92,15 +92,32 @@ void Compass::displayText(CameraObject &camera)
 	dispText = oss.str();
 	getDirText(dispText, camera);
 
-	char* result = new char[dispText.size() + 1];
-	strcpy_s(result, dispText.size() + 1, dispText.c_str());
+	char* compassDirText = new char[dispText.size() + 1];
+	strcpy_s(compassDirText, dispText.size() + 1, dispText.c_str());
+
+	// Displays flashlight battery life remaining in terms of time left
+	std::ostringstream oss2;
+	double flashlightTimeLeft = 120.0 - mazeObj.getElapsedTime();
+	oss2 << std::fixed << std::setfill('0') << std::setprecision(2) << flashlightTimeLeft;
+	string dispText2 = oss2.str();
+
+	char* flashlightTimeLeftText = new char[dispText2.size() + 1];
+	strcpy_s(flashlightTimeLeftText, dispText2.size() + 1, dispText2.c_str());
 
 	glDisable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
 
+
+	// Displays flashlight battery life time left
+	glColor3ub(255, 0, 0);
+	glRasterPos2i(300, 50);
+	YsGlDrawFontBitmap12x16("FLASHLIGHT TIME LEFT");
+	glRasterPos2i(350, 75);
+	YsGlDrawFontBitmap12x16(flashlightTimeLeftText);
+	
 	// Displays compass direction
 	glColor3ub(255, 0, 0);
 	glRasterPos2i(675, 175);
-	YsGlDrawFontBitmap12x16(result);
+	YsGlDrawFontBitmap12x16(compassDirText);
 
 	// Displays letters denoting directions on the compass
 	glColor3ub(0, 0, 0);
@@ -116,7 +133,7 @@ void Compass::displayText(CameraObject &camera)
 	// Displays text about how to quit the game
 	glColor3ub(255, 0, 0);
 	glRasterPos2i(25, 50);
-	YsGlDrawFontBitmap8x12("Press ESC to pull up GAME MENU");
+	YsGlDrawFontBitmap8x12("Press ESC to open GAME MENU");
 
 	glEnable(GL_LIGHTING);			// Disabling lighting as the compass should be unaffected
 }

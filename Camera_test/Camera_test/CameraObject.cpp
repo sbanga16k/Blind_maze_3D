@@ -21,7 +21,7 @@ void CameraObject::initialize()
 	camX = 0.; camY = 0.; camZ = 0.;
 	heading = 0.; pitch = 0.; bank = 0.;
 	// Setting increments for camera rotation & translation
-	rotInc = 2.5, translInc = 0.25;
+	rotInc = 4, translInc = 0.4;
 
 	fov = 30.0;			// FoV: 30 degrees
 	nearZ = 0.1; farZ = 200.0;
@@ -99,7 +99,7 @@ void CameraObject::getForwardComponents(double &compX, double &compY, double &co
 
 
 // Rotates & Moves the camera in accordance with the keypress
-void CameraObject::moveCamera(Sounds &audio, bool &terminate, YsSoundPlayer &backgroundPlayer)
+void CameraObject::moveCamera(Sounds &audio, mazeData &mazeObj, bool &terminate, YsSoundPlayer &backgroundPlayer)
 {
 	//cout << "X " << camX << " Y " << camY << " Z " << camZ << endl;
 
@@ -145,7 +145,7 @@ void CameraObject::moveCamera(Sounds &audio, bool &terminate, YsSoundPlayer &bac
 
 	// Shift key used for sprinting
 	if (FsGetKeyState(FSKEY_SHIFT))
-		newTranslInc = translInc * 2.5;
+		newTranslInc = translInc * 2.25;
 	else
 		newTranslInc = translInc;
 
@@ -153,34 +153,35 @@ void CameraObject::moveCamera(Sounds &audio, bool &terminate, YsSoundPlayer &bac
 	if (FsGetKeyState(FSKEY_W)) {
 		camX_temp = camX + compX * newTranslInc;
 		camZ_temp = camZ + compZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
+		detectCollision(camZ_temp, camX_temp, audio, mazeObj, terminate, backgroundPlayer);
 	}
 
 	// Moves in South direction
 	else if (FsGetKeyState(FSKEY_S)) {
 		camX_temp = camX - compX * newTranslInc;
 		camZ_temp = camZ - compZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
+		detectCollision(camZ_temp, camX_temp, audio, mazeObj, terminate, backgroundPlayer);
 	}
 
 	// Moves in East direction
 	if (FsGetKeyState(FSKEY_D)) {
 		camX_temp = camX + compRightX * newTranslInc;
 		camZ_temp = camZ + compRightZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
+		detectCollision(camZ_temp, camX_temp, audio, mazeObj, terminate, backgroundPlayer);
 	}
 
 	// Moves in West direction
 	else if (FsGetKeyState(FSKEY_A)) {
 		camX_temp = camX - compRightX * newTranslInc;
 		camZ_temp = camZ - compRightZ * newTranslInc;
-		detectCollision(camZ_temp, camX_temp, audio, terminate, backgroundPlayer);
+		detectCollision(camZ_temp, camX_temp, audio, mazeObj, terminate, backgroundPlayer);
 	}
 }
 
 
 // Checks for collision detection to prevent going into the walls
-void CameraObject::detectCollision(double &camZ_temp, double &camX_temp, Sounds &audio, bool &terminate, YsSoundPlayer &backgroundPlayer)
+void CameraObject::detectCollision(double &camZ_temp, double &camX_temp, Sounds &audio, 
+	mazeData &mazeObj, bool &terminate, YsSoundPlayer &backgroundPlayer)
 {
 	double scale = getFactor();
 	int c = (int)(camZ_temp / scale);
@@ -223,7 +224,9 @@ void CameraObject::detectCollision(double &camZ_temp, double &camX_temp, Sounds 
 
 		soundPlayer.Start();
 		soundPlayer.PlayBackground(wav, false);
-		Utils::loadMenu(terminate, *this, 3, backgroundPlayer);
+
+		mazeObj.setLightInvisible();
+		Utils::loadMenu(terminate, *this, mazeObj, 3, backgroundPlayer);
 	}
 }
 

@@ -6,6 +6,7 @@
 #include <iostream>
 #include <vector>
 #include "CameraObject.h"
+#include "maze.h"
 
 using namespace std;
 
@@ -24,7 +25,7 @@ public:
 	Compass();		// Default constructor
 	// Gets compass direction based on heading angle
 	void getDirText(string & dispText, CameraObject &camera);
-	void displayText(CameraObject &camera);		// Displays relevant text on the graphics window
+	void displayText(CameraObject &camera, mazeData &mazeObj);		// Displays relevant text on the graphics window
 	void moveNeedle(CameraObject & camera);		// Rotates needle in response to camera rotation
 	void drawNeedle();							// Draws the compass needle on the graphics window
 	void drawCompass(CameraObject &camera);		// Draws the compass on the graphics window

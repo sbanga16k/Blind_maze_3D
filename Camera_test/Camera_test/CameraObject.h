@@ -32,12 +32,12 @@ public:
 	void setCameraTransform();	// Sets mtx for transformation from global coord to camera's coord system
 
 	// Moves the camera in accordance with the keypress
-	void moveCamera(Sounds &audio, bool &terminate, YsSoundPlayer &backgroundPlayer);
+	void moveCamera(Sounds &audio, mazeData &mazeObj, bool &terminate, YsSoundPlayer &backgroundPlayer);
 	// Sets input args to components of unit vector in current forward direction along each axis
 	void getForwardComponents(double &endX, double &endY, double &endZ);
 	// Detects collision with wall to prevent going into it
 	void detectCollision(double &camZ_temp, double &camX_temp, Sounds &audio, 
-		bool &terminate, YsSoundPlayer &backgroundPlayer);
+		mazeData &mazeObj, bool &terminate, YsSoundPlayer &backgroundPlayer);
 	// Prints values of camera's coord & angles (for debugging)
 	char* printVals();
 };

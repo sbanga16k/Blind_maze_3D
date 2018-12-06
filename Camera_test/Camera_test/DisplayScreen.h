@@ -5,6 +5,7 @@
 
 #include "CameraObject.h"
 #include "Compass.h"
+#include "maze.h"
 
 class Screen {
 
@@ -14,5 +15,5 @@ private:
 public:
 	Screen();				// Default constructor
 	void updateCompass(CameraObject &camera);	// Updates the compass needle direction acc. to camera rotation
-	void display(CameraObject &camera);			// Displays compass with relevant text on the graphics window
+	void display(CameraObject &camera, mazeData &mazeObj);		// Displays compass with relevant text on the graphics window
 };

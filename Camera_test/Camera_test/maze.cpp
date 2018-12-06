@@ -4,7 +4,16 @@
 #include "maze.h"
 #include "fssimplewindow.h"
 
-mazeData::mazeData()
+using namespace std;
+
+// Default contructor
+mazeData::mazeData() {
+	initialize();
+}
+
+
+// Initializes parameters associated with the maze object 
+void mazeData::initialize()
 {
 	mazeLen = 35;
 	factor = 3;
@@ -15,6 +24,7 @@ mazeData::mazeData()
 	a = std::chrono::system_clock::now();
 	elapsed = a - b;
 }
+
 
 void mazeData::load(char* name, int len)
 {
@@ -30,14 +40,43 @@ void mazeData::load(char* name, int len)
 	fillData.close();
 }
 
-int mazeData::getValMat(int r, int c)
-{
+// Returns value at that index
+int mazeData::getValMat(int r, int c) {
 	return M[r][c];
 }
 
-int mazeData::getFactor()
-{
+// Returns the factor for scaling drawing
+int mazeData::getFactor() {
 	return factor;
+}
+
+// Returns elapsed time for flashlight life
+double mazeData::getElapsedTime() {
+	return elapsed.count();
+}
+
+// Sets value of elapsed time
+void mazeData::setElapsedTime() 
+{
+	std::chrono::time_point<std::chrono::system_clock> d, e;
+	d = std::chrono::system_clock::now();
+	e = std::chrono::system_clock::now();
+	elapsed = d - e;
+}
+
+// Returns whether flashlight is on/off
+bool mazeData::getLightVisible() {
+	return lightVisible;
+}
+
+// Turns the flashlight off
+void mazeData::setLightInvisible() {
+	lightVisible = false;
+}
+
+// Turns the flashlight on
+void mazeData::setLightVisible() {
+	lightVisible = true;
 }
 
 void mazeData::drawCuboid(int x_, int y_, int z_, Sounds &audio)
@@ -45,19 +84,20 @@ void mazeData::drawCuboid(int x_, int y_, int z_, Sounds &audio)
 	// Specifies material color properties
 	glEnable(GL_COLOR_MATERIAL);
 
-	std::vector<float> blueDiffuseMatParams{ 0.0f, 0.0f, 1.0f, 1.0f };
+	std::vector<float> diffuseMatParams{ 0.0f, 0.0f, 0.0f, 1.0f };
 	std::vector<float> disableParams{ 0.0f, 0.0f, 0.0f, 1.0f };
 
 	// Define the material type for lighting (only diffuse reflection)
 	glMaterialfv(GL_FRONT_AND_BACK, GL_AMBIENT, disableParams.data());
-	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, blueDiffuseMatParams.data());
+	glMaterialfv(GL_FRONT_AND_BACK, GL_DIFFUSE, diffuseMatParams.data());
 	glMaterialfv(GL_FRONT_AND_BACK, GL_SPECULAR, disableParams.data());
 	glMaterialf(GL_FRONT_AND_BACK, GL_SHININESS, 0.0f);
 
 	int cuboidLen = factor;
 	//size_t numDivisions = 25;
-	size_t numDivisions = 10;
+	int numDivisions = 10;		// Specifies number of unit squares used for drawing each wall
 
+	// Initial positions of space coords
 	float initX = factor * float(x_);
 	float initY = 5 * float(y_);
 	float initZ = factor * float(z_);
@@ -68,6 +108,7 @@ void mazeData::drawCuboid(int x_, int y_, int z_, Sounds &audio)
 	FsPollDevice();
 	int key = FsInkey();
 
+	// Check for flashlight on/off & play flashlight toggle sound
 	if (key == FSKEY_F && !lightVisible)
 	{
 		lightVisible = true;
@@ -80,23 +121,27 @@ void mazeData::drawCuboid(int x_, int y_, int z_, Sounds &audio)
 		lightVisible = false;
 		audio.playSound(2);
 	}
+
+	// Accumulates elapsed time when flashlight is on
 	if (lightVisible == true)
 	{
 		end = std::chrono::system_clock::now();
 		elapsed = store + end - start;
-		//	printf("%f \n", elapsed);
+		//cout << elapsed.count() << endl;
 	}
 
+	// Condition for flashlight battery running out
 	if (elapsed.count()>120)
-	{
 		lightVisible = false;
-	}
 
+
+	// Specifies color of walls to be visible depending on whether flashlight is on/off
 	if (lightVisible)
 		glColor3f(1.0f, 1.0f, 0.0f);
 	else
 		glColor3f(0.025f, 0.025f, 0.0f);
 
+	//// Actual drawing of the cuboid
 	// Front face
 	float z = initZ + cuboidLen;
 
@@ -215,10 +260,10 @@ void mazeData::drawMaze(Sounds &audio) {
 			if (this->getValMat(i, j) == 8)
 			{
 				this->drawEllipsoid(factor*j, factor*i, 1.5f, 20, 20, 1.5f, 1.5f, 1.5f, 'g');
-				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 2.0f, 0.75f, 0.75f, 'b');
-				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 1.8f, 1.0f, 1.0f, 'w');
+				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 0.75f, 0.75f, 2.0f, 'b');
+				this->drawEllipsoid(factor*j, factor*i, 1.5f, 10, 10, 1.0f, 1.0f, 1.8f, 'w');
 				this->drawEllipsoid(factor*j, factor*i, 3.25f, 20, 20, 1.0f, 1.0f, 1.0f, 'y');
-				this->drawEllipsoid(factor*j, factor*i, 3.5f, 10, 10, 1.2f, 0.35f, 0.35f, 'w');
+				this->drawEllipsoid(factor*j, factor*i, 3.5f, 10, 10, 0.35f, 0.35f, 1.2f, 'w');
 			}
 		}
 	}

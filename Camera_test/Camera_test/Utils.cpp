@@ -5,6 +5,7 @@
 #include "fssimplewindow.h"
 #include "Utils.h"
 #include "CameraObject.h"
+#include "maze.h"
 #include "yssimplesound.h"
 #include "yspng.h"
 
@@ -54,57 +55,12 @@ void Utils::drawCircle(double centerX, double centerY, double rad, char color, b
 
 
 // Loads game menu & provides functionality for resume, restart & quitting the game
-void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPlayer &backgroundPlayer)
+void Utils::loadMenu(bool &terminate, CameraObject &camera, mazeData &mazeObj, int index, YsSoundPlayer &backgroundPlayer)
 {
 	int wid, hei;
 	FsGetWindowSize(wid, hei);
-	if (index == 1)
-	{
-		YsRawPngDecoder png;						// For a PNG that is the same size as your window
-		if (YSOK == png.Decode("Start.png"))
-		{
-			png.Flip();
-		}
-		else
-		{
-			printf("Read Error!\n");
-		}
-		int key;
-		bool terminatePic = false;
-
-		while (!terminatePic)
-		{
-			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-			int winWid, winHei;
-			FsGetWindowSize(winWid, winHei);
-			//FsOpenWindow(16, 16, png.wid, png.hei, 1);
-			glRasterPos2d(0.0, (double)(winHei - 1));
-			glDrawPixels(png.wid, png.hei, GL_RGBA, GL_UNSIGNED_BYTE, png.rgba);
-			glEnd();
-			FsSwapBuffers();
-			//glFlush();
-
-			FsPollDevice();
-			key = FsInkey();
-			if (key == FSKEY_ESC)
-			{
-				terminatePic = true;
-				glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
-			}
-			else if (FsGetKeyState(FSKEY_R))
-			{
-				camera.setCameraCoords(96.0, 5.0, 100.0);
-				camera.setCameraAngles(0.0, 0.0);
-				terminatePic = true;
-			}
-			else if (FsGetKeyState(FSKEY_Q))
-			{
-				terminate = true;
-				break;
-			}
-		}
-	}
-
+	
+	// Game (Pause) Menu
 	if (index == 2)
 	{
 		YsRawPngDecoder png;					// For a PNG that is the same size as your window
@@ -122,16 +78,15 @@ void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPl
 		while (!terminatePic)
 		{
 			FsPollDevice();
+
 			key = FsInkey();
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			int winWid, winHei;
 			FsGetWindowSize(winWid, winHei);
-			//FsOpenWindow(16, 16, png.wid, png.hei, 1);
 			glRasterPos2d(0.0, (double)(winHei - 1));
 			glDrawPixels(png.wid, png.hei, GL_RGBA, GL_UNSIGNED_BYTE, png.rgba);
 			glEnd();
 			FsSwapBuffers();
-			//glFlush();
 
 			if (FsGetKeyState(FSKEY_ESC))
 			{
@@ -140,6 +95,7 @@ void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPl
 			}
 			else if (FsGetKeyState(FSKEY_R))
 			{
+				mazeObj.setElapsedTime();
 				camera.setCameraCoords(96.0, 5.0, 100.0);
 				camera.setCameraAngles(0.0, 0.0);
 				terminatePic = true;
@@ -151,6 +107,8 @@ void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPl
 			}
 		}
 	}
+
+	// Game Win Menu
 	if (index == 3)
 	{
 		backgroundPlayer.End();
@@ -184,12 +142,10 @@ void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPl
 			glClear(GL_DEPTH_BUFFER_BIT | GL_COLOR_BUFFER_BIT);
 			int winWid, winHei;
 			FsGetWindowSize(winWid, winHei);
-			//FsOpenWindow(16, 16, png.wid, png.hei, 1);
 			glRasterPos2d(0.0, (double)(winHei - 1));
 			glDrawPixels(png.wid, png.hei, GL_RGBA, GL_UNSIGNED_BYTE, png.rgba);
 			//glEnd();
 			FsSwapBuffers();
-			// glFlush();
 
 			if (FsGetKeyState(FSKEY_ESC))
 			{
@@ -198,6 +154,7 @@ void Utils::loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPl
 			}
 			else if (FsGetKeyState(FSKEY_R))
 			{
+				mazeObj.setElapsedTime();
 				camera.setCameraCoords(96.0, 5.0, 100.0);
 				camera.setCameraAngles(0.0, 0.0);
 				terminatePic = true;

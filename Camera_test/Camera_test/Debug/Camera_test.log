@@ -1,14 +1,2 @@
-﻿  testMain.cpp
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(29): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(30): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(44): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(49): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(74): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(75): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(79): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(84): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(103): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(104): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(108): warning C4305: 'argument': truncation from 'double' to 'GLfloat'
-c:\users\saura\desktop\ec_project\camera_test\camera_test\testmain.cpp(271): warning C4101: 'key': unreferenced local variable
+﻿  Main.cpp
   Camera_test.vcxproj -> C:\Users\saura\Desktop\EC_Project\Camera_test\Debug\Camera_test.exe

@@ -12,5 +12,5 @@ namespace Utils {
 	// Draws circle at specified location with specified radius
 	void drawCircle(double centerX, double centerY, double rad, char color, bool fill, double thickness);
 	// Loads the game menu when 'ESC' key pressed
-	void loadMenu(bool &terminate, CameraObject &camera, int index, YsSoundPlayer &backgroundPlayer);
+	void loadMenu(bool &terminate, CameraObject &camera, mazeData &mazeObj, int index, YsSoundPlayer &backgroundPlayer);
 }

@@ -25,7 +25,7 @@ void Screen::updateCompass(CameraObject &camera) {
 
 
 // Displays compass with text on the graphics window
-void Screen::display(CameraObject &camera) {
+void Screen::display(CameraObject &camera, mazeData &mazeObj) {
 	theCompass.drawCompass(camera);		// Draws the compass object on the graphics window
-	theCompass.displayText(camera);		// Displays text on compass & other parts of screen
+	theCompass.displayText(camera, mazeObj);		// Displays text on compass & other parts of screen
 }
